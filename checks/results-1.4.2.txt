@@ -1,0 +1,13 @@
+Version: 1.4.2-bubble (versionCode 7), minSdk 26, targetSdk 35
+PASS: Android assembleDebug and lintDebug
+PASS: APK v2 signature and version metadata verification
+PASS: preview.js syntax
+PASS: Browser visual checks: startup greeting, click prompt and family answer shown inside rounded speech balloon with downward tail
+PASS: No browser console errors
+Native balloon uses a continuous filled/stroked outline, centered text and tail-aware padding; text wraps with content height.
+Speech and canvas share preview drag translation; Android balloon moves with the existing overlay root.
+Final APK: dist/球球桌面宠物-新版.apk
+SHA256: B695F996251D732DF52E1EA22FB4E32F8B1979FB7FADB691041B902706401B4D
+Preview: reference-video/球球-说话气泡-预览.png
+Previous APK backed up in dist/旧版备份/球球桌面宠物-1.4.1.apk
+Android handset not connected; real-device rendering and overlay positioning remain unverified.

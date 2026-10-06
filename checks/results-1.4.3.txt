@@ -1,0 +1,14 @@
+Version: 1.4.3-idle (versionCode 8), minSdk 26, targetSdk 35
+PASS: Android assembleDebug and lintDebug
+PASS: APK v2 signature and version metadata verification
+PASS: preview.js syntax
+PASS: Browser without any clicks: observed sitting, then lying with tail, then grooming after natural timer intervals
+PASS: Three idle action buttons absent; voice control and pet interaction menu remain
+PASS: No browser console errors
+Native and preview random idle selection excludes the current pose and schedules the next switch after 7–13 seconds.
+Idle selection pauses during busy actions, dragging, hidden screen/page and open menus; resumes automatically after interaction.
+Final APK: dist/球球桌面宠物-新版.apk
+SHA256: 426AFBCDBE58475B720234CEE85843DFB80956DD0E03DE80FD33F44399603DC7
+Preview: reference-video/球球-自动待机-预览.png
+Previous APK backed up in dist/旧版备份/球球桌面宠物-1.4.2.apk
+Android handset not connected; real-device rendering and background service behavior remain unverified.

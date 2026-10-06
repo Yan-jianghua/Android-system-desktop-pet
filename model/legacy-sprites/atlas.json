@@ -1,0 +1,10 @@
+{
+  "source": "user's installed desktop pet, matched to supplied reference recording",
+  "width": 1536,
+  "height": 2288,
+  "columns": 8,
+  "rows": 11,
+  "cellWidth": 192,
+  "cellHeight": 208,
+  "states": {"idle":{"row":0,"frames":7},"walkRight":{"row":1,"frames":8},"walkLeft":{"row":2,"frames":8},"wave":{"row":3,"frames":4},"jump":{"row":4,"frames":5},"sleep":{"row":5,"frames":8},"happy":{"row":6,"frames":6},"sit":{"row":7,"frames":6},"groom":{"row":8,"frames":7}}
+}

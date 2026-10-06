@@ -1,0 +1,25 @@
+package com.qiuqiu.pet;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.MotionEvent;
+import android.webkit.*;
+import android.widget.FrameLayout;
+import org.json.JSONObject;
+
+/** Transparent offline WebGL view; glTF skinning plays the Blender rig's clips. */
+public class CatView extends FrameLayout {
+ public String mode="sit",food=""; public int facing=1,urine,poop;public boolean tray;
+ private final WebView web;private final Handler handler=new Handler(Looper.getMainLooper());private String last="";private boolean loaded;
+ public CatView(Context context){super(context);setBackgroundColor(Color.TRANSPARENT);web=new WebView(context);web.setBackgroundColor(Color.TRANSPARENT);web.getSettings().setJavaScriptEnabled(true);web.getSettings().setAllowFileAccess(false);web.getSettings().setAllowContentAccess(false);web.setWebViewClient(new WebViewClient(){
+  @Override public WebResourceResponse shouldInterceptRequest(WebView view,WebResourceRequest request){String path=request.getUrl().getPath();if(!"appassets.androidplatform.net".equals(request.getUrl().getHost())||path==null||!path.startsWith("/pet3d/")||path.contains(".."))return new WebResourceResponse("text/plain","UTF-8",new java.io.ByteArrayInputStream(new byte[0]));try {String type=path.endsWith(".js")?"application/javascript":path.endsWith(".glb")?"model/gltf-binary":"text/html";return new WebResourceResponse(type,"UTF-8",context.getAssets().open(path.substring(1)));}catch(java.io.IOException e){return new WebResourceResponse("text/plain","UTF-8",new java.io.ByteArrayInputStream(new byte[0]));}}
+  @Override public void onPageFinished(WebView v,String url){loaded=true;last="";}
+ });addView(web,new FrameLayout.LayoutParams(-1,-1));web.loadUrl("https://appassets.androidplatform.net/pet3d/index.html");}
+ @Override public boolean onInterceptTouchEvent(MotionEvent event){return true;}
+ @Override public boolean performClick(){super.performClick();return true;}
+ private final Runnable sync=new Runnable(){public void run(){if(loaded){try{JSONObject obj=new JSONObject();obj.put("mode",mode);obj.put("facing",facing);obj.put("food",food);obj.put("urine",urine);obj.put("poop",poop);String json=obj.toString();if(!json.equals(last)){web.evaluateJavascript("window.setPetState&&window.setPetState("+json+")",null);last=json;}}catch(org.json.JSONException ignored){}}handler.postDelayed(this,100);}};
+ @Override protected void onAttachedToWindow(){super.onAttachedToWindow();handler.post(sync);}
+ @Override protected void onDetachedFromWindow(){handler.removeCallbacksAndMessages(null);web.destroy();super.onDetachedFromWindow();}
+ @Override protected void onWindowVisibilityChanged(int visibility){super.onWindowVisibilityChanged(visibility);if(web!=null){if(visibility==VISIBLE){web.onResume();web.evaluateJavascript("window.setPetPaused&&window.setPetPaused(false)",null);}else{web.evaluateJavascript("window.setPetPaused&&window.setPetPaused(true)",null);web.onPause();}}}
+}

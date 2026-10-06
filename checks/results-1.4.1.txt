@@ -1,0 +1,14 @@
+Version: 1.4.1-natural (versionCode 6), minSdk 26, targetSdk 35
+PASS: Android assembleDebug and lintDebug
+PASS: APK v2 signature verification; version metadata verified
+PASS: All 40 sprite frames: transparent alpha, nonempty frames, row/ground coordinates and no rectangular background matte
+PASS: preview.js syntax
+PASS: Browser visual check: smooth, subtle neck transition in sitting and disgust poses
+PASS: Browser visual check: no litter tray with menu open; tray and shovel during cleaning; tray hidden when completion popup appears
+Native and preview predicates both restrict the litter tray to pee, poop and clean modes.
+Previously verified memory/calendar/feed behavior remains unchanged by this revision.
+Final APK: dist/球球桌面宠物-新版.apk
+SHA256: 4791F1F5B790F3895C55372105C032B591BC7C20EC4CFA4C45A5FA89A6A8E5D5
+Preview: reference-video/球球-自然颈部-预览.png
+Generation prompts and selected assets: model/颈部优化素材记录.json (built-in imagegen)
+Android handset not connected; real-device rendering, overlay permissions and TTS remain unverified.

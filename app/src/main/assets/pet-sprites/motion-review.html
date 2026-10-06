@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>球球 · 288 帧动作检查</title>
+<style>body{margin:0;padding:25px;background:#edf0e8;color:#45483f;font:15px system-ui;text-align:center}h1{font-size:25px}canvas{display:block;width:min(470px,92vw);height:auto;margin:20px auto;background:repeating-conic-gradient(#e4e8df 0% 25%,#f4f6ef 0% 50%) 0/24px 24px;border:1px dashed #96a58a;border-radius:18px}button,select,input{font:inherit;padding:10px;margin:5px;border:1px solid #b7bfaf;border-radius:9px;background:#fff}p{line-height:1.7}output{display:block;margin:12px}a{color:#58794d}</style>
+<h1>球球 · 288 帧动作检查</h1><p>每周期 5 秒，288 帧（24 张关键画面＋运动补间）。虚线仅用于检查边界，正式悬浮宠物没有边框。</p>
+<label>动作 <select id="action"></select></label><button id="pause">暂停</button><button id="previous">上一帧</button><button id="next">下一帧</button>
+<canvas width="768" height="768" aria-label="球球动作预览"></canvas><output id="status">加载中</output><label>跳到帧 <input id="frame" type="number" min="1" max="288" value="1"></label><label><input type="checkbox" id="mirror">向左走 / 跑</label><p><a href="/?preview">返回宠物互动预览</a></p>
+<script src="care.js"></script><script src="motion-mesh.js"></script><script src="motion-renderer.js"></script><script>
+const renderer=new CatRenderer(document.querySelector('canvas')),select=document.getElementById('action'),pause=document.getElementById('pause'),input=document.getElementById('frame'),status=document.getElementById('status');
+const labels={sit:'坐着左右看',groom:'舔毛',lie:'趴着摇尾巴',walk:'走路',run:'跑步',happy:'开心',disgust:'嫌弃',kibble:'吃猫粮',treat:'吃猫条',chocolate:'吃巧克力',pee:'尿尿',poop:'便便',clean:'看着铲屎'};
+for(const [value,label]of Object.entries(labels)){const o=document.createElement('option');o.value=value;o.textContent=label;select.append(o)}
+let playing=true,start=performance.now(),frame=0,last=0;function stop(){playing=false;pause.textContent='播放'}
+select.onchange=()=>{start=performance.now();frame=0;input.value=1};pause.onclick=()=>{playing=!playing;pause.textContent=playing?'暂停':'播放';start=performance.now()-frame*renderer.motions[select.value].duration/288};
+document.getElementById('next').onclick=()=>{stop();frame=(frame+1)%288;input.value=frame+1};document.getElementById('previous').onclick=()=>{stop();frame=(frame+287)%288;input.value=frame+1};input.oninput=()=>{stop();frame=Math.max(0,Math.min(287,(Number(input.value)||1)-1))};
+function draw(ms){requestAnimationFrame(draw);if(ms-last<1000/60)return;last=ms;if(!renderer.motions)return;const key=select.value,a=renderer.motions[key];if(playing){frame=motionIndex(ms-start,a.duration,true);input.value=frame+1}renderer.render({pose:key,elapsed:ms-start,frameIndex:frame,urine:2,poop:1,face:document.getElementById('mirror').checked?-1:1});status.textContent=renderer.error||labels[key]+' · 第 '+(frame+1)+' / 288 帧'+(playing?' · 播放中':' · 已暂停')}
+renderer.ready.then(()=>requestAnimationFrame(draw)).catch(e=>status.textContent=e.message);
+</script></html>
+
+

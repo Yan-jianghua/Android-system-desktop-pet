@@ -1,0 +1,21 @@
+球球桌面宠物 1.3 / versionCode 4
+Final APK: dist/球球桌面宠物-新版.apk
+SHA256: D2B2474CDC0D09B51EF8B9F7C9DFCC8D4346EEE5186A101E7EFF7AC65656687D
+
+PASS Android assembleDebug and lintDebug (0 errors, 5 warnings)
+PASS APK v2 signature verification; minimum Android API 26
+PASS packaged assets: own / food-reaction / toilet / props; no old Codex atlas
+PASS MemoryCheck: 0-4 feed counts, six-hour boundaries, 10-second cooldown, interrupted/resumed events, duplicate prevention, persistence and cleaning
+PASS CalendarCheck: annual lunar birthdays, birthday fallback, fixed family dialogue, Chinese festivals
+PASS preview-check.cjs: same care and calendar rules in computer preview
+PASS assets_check.py: all 36 source frames contain content, correct coordinates, transparent alpha
+PASS browser UI: cat treat animation + 主人你真好; immediate second feeding rejected with 10-second cooldown
+PASS browser UI: typed 爸爸妈妈是谁 returned 爸爸是闫江桦，妈妈是张春华
+PASS browser UI: 2026-10-27 unknown question returned 球球祝爸爸生日快乐
+PASS browser UI: pee and poop inside litter tray; two accepted feeds produced two poop pieces
+PASS browser UI: reload preserved 2 poop + 1 urine
+PASS browser UI: seven-second hand/scoop cleanup reported 2 poop + 1 urine, then emptied to zero
+PASS browser UI: chocolate completed with 狗屎东西
+Visual checks: own longhair cat, low lying body + upright swaying tail, food poses, toilet poses, scoop/hand, fixed adjacent-frame fur bleed
+
+Not tested on an Android handset: no device connected. Real overlay permission, TTS voice engine, vendor background policies and long-duration behavior require handset testing.

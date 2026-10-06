@@ -1,0 +1,13 @@
+PASS: interrupted/resumed events, no duplicates, all feeding boundaries, cooldown, windows, persisted counts and cleaning
+PASS: annual lunar birthdays, birthday fallback, NY eve, festivals and all family replies
+PASS: priority toilet, resumed feeding/reaction, interrupted cleaning counts, exact boundaries and automatic idle
+PASS: browser preview care history, windows, lunar birthday and festival parity
+PASS: browser priority toilet, resumed feeding/reaction and seven seconds of interrupted cleaning
+PASS: real preview controller interrupts care with menus open, allows busy dragging, resumes food reaction and reports/clears updated waste correctly
+PASS: real preview petting animation/hearts, busy guard, daily note and reward deduplication
+PASS: companionship restart, cooldown boundary, daily notes/rewards, cap and separate care history
+PASS: browser companionship persistence, cooldown, daily rewards, cap and independent litter
+PASS: all 38 action frames, alpha, frame coordinates, own identity assets, props
+
+PASS: final assembleDebug/lintDebug; 0 errors, 7 warnings; APK signature v2; packaged assets byte-identical
+SHA256 02D216EDAF6302E506100D42133CB8C2834F8ACFA950C72067E6D013887AECCB

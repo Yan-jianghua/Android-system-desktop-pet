@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');
+const {Companion,CareState}=require('../app/src/main/assets/pet-sprites/care.js');
+const db=new Map,store={getItem:k=>db.get(k),setItem:(k,v)=>db.set(k,v)},n=1800000000000;
+let a=new Companion(store,()=>n);assert(a.pet(n));assert.equal(a.data.affection,2);
+a=new Companion(store,()=>n);assert(!a.pet(n+29999));assert(a.pet(n+30000));
+assert(a.visit(n));a=new Companion(store,()=>n);assert(!a.visit(n));assert.equal(a.data.affection,7);
+assert(a.visit(n+86400000));assert.equal(a.note(n),new Companion(store,()=>n).note(n));
+for(let i=2;i<80;i++)a.pet(n+i*30000);
+assert.equal(new Companion(store,()=>n).data.affection,100);
+const care=new CareState(store,()=>n);care.data.poop=3;care.data.urine=8;care.save();a.visit(n+2*86400000);
+assert.equal(new CareState(store,()=>n).data.poop,3);assert.equal(new CareState(store,()=>n).data.urine,8);
+console.log('PASS: browser companionship persistence, cooldown, daily rewards, cap and independent litter');

@@ -1,0 +1,317 @@
+Info: Saved as "qiuqiu.blend"
+INFO Draco mesh compression is available, use library at C:\Users\y'j'h\Desktop\安卓手机桌面宠物\.tools\blender\blender-4.5.0-windows-x64\4.5\scripts\addons_core\io_scene_gltf2\extern_draco.dll
+18:30:40 | INFO: Starting glTF 2.0 export
+18:30:40 | INFO: Extracting primitive: Chest strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.023
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.029
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Ear
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Ear.001
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.020
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.026
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Foreleg L strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Foreleg R strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Haunch L strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Haunch R strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Hind foot L strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Hind foot R strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.025
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.031
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.021
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Sphere.027
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Left cheek strands
+18:30:41 | INFO: Primitives created: 1
+18:30:41 | INFO: Extracting primitive: Long chest ruff strands
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Lower foreleg L strands
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Lower foreleg R strands
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Sphere.034
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Mouth
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Mouth.001
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Sphere.032
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Sphere.033
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Paw L strands
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Paw R strands
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Philtrum
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Sphere.022
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Sphere.028
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Right cheek strands
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Round skull strands
+18:30:42 | INFO: Primitives created: 1
+18:30:42 | INFO: Extracting primitive: Rump strands
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Tail volume 0 strands
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Tail volume 1 strands
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Tail volume 2 strands
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Tail volume 3 strands
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Sphere.035
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Nose
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Sphere.024
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Sphere.030
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.001
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.002
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.003
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.004
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.005
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.006
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.007
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.008
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.009
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.010
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.011
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.012
+18:30:43 | INFO: Primitives created: 1
+18:30:43 | INFO: Extracting primitive: Whisker.013
+18:30:43 | INFO: Primitives created: 1
+18:30:48 | INFO: Finished glTF 2.0 export in 7.332783460617065 s
+Blender 4.5.0 (hash 8cb6b388974a built 2025-07-15 01:36:24)
+Fra:1 Mem:199.05M (Peak 199.06M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Continuous feline skin
+Fra:1 Mem:199.05M (Peak 199.06M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Chest groom
+Fra:1 Mem:199.05M (Peak 199.06M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Right cheek groom
+Fra:1 Mem:199.87M (Peak 199.87M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Foreleg L groom
+Fra:1 Mem:201.49M (Peak 201.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Lower foreleg L groom
+Fra:1 Mem:213.23M (Peak 213.23M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Paw L groom
+Fra:1 Mem:219.51M (Peak 219.51M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Fur rim
+Fra:1 Mem:224.85M (Peak 224.85M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Haunch L groom
+Fra:1 Mem:224.85M (Peak 224.85M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Eye catchlight
+Fra:1 Mem:225.13M (Peak 225.13M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Large soft key
+Fra:1 Mem:225.13M (Peak 225.13M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.013
+Fra:1 Mem:226.02M (Peak 226.02M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Hind foot L groom
+Fra:1 Mem:226.67M (Peak 226.67M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.012
+Fra:1 Mem:230.79M (Peak 230.79M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.011
+Fra:1 Mem:231.75M (Peak 231.75M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.010
+Fra:1 Mem:231.77M (Peak 231.77M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.009
+Fra:1 Mem:232.86M (Peak 232.96M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.008
+Fra:1 Mem:234.50M (Peak 234.50M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.007
+Fra:1 Mem:236.18M (Peak 236.18M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Mouth.001
+Fra:1 Mem:236.41M (Peak 236.41M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.006
+Fra:1 Mem:236.43M (Peak 236.43M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.005
+Fra:1 Mem:236.45M (Peak 236.45M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.004
+Fra:1 Mem:236.46M (Peak 236.46M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.003
+Fra:1 Mem:236.48M (Peak 236.48M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.002
+Fra:1 Mem:236.50M (Peak 236.50M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.001
+Fra:1 Mem:238.31M (Peak 238.31M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker
+Fra:1 Mem:238.33M (Peak 238.33M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Mouth
+Fra:1 Mem:238.92M (Peak 238.92M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Foreleg R groom
+Fra:1 Mem:239.15M (Peak 239.15M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Philtrum
+Fra:1 Mem:239.16M (Peak 239.16M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Triangular nose
+Fra:1 Mem:239.16M (Peak 239.16M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tongue
+Fra:1 Mem:239.80M (Peak 239.80M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Lower foreleg R groom
+Fra:1 Mem:241.43M (Peak 241.43M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Paw R groom
+Fra:1 Mem:241.43M (Peak 241.43M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Lower jaw
+Fra:1 Mem:241.54M (Peak 241.54M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Hind foot R groom
+Fra:1 Mem:243.84M (Peak 243.84M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Muzzle right
+Fra:1 Mem:244.18M (Peak 244.18M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Muzzle left
+Fra:1 Mem:245.02M (Peak 245.02M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Inner ear R
+Fra:1 Mem:245.75M (Peak 245.75M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Ear R
+Fra:1 Mem:245.72M (Peak 245.75M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Upper eyelid R
+Fra:1 Mem:245.65M (Peak 245.75M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 0 groom
+Fra:1 Mem:246.17M (Peak 246.17M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Corneal shine R
+Fra:1 Mem:247.27M (Peak 247.27M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Pupil R
+Fra:1 Mem:248.30M (Peak 248.30M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Iris R
+Fra:1 Mem:248.41M (Peak 248.41M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Eye socket R
+Fra:1 Mem:248.78M (Peak 248.78M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Inner ear L
+Fra:1 Mem:248.88M (Peak 248.88M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 1 groom
+Fra:1 Mem:249.32M (Peak 249.32M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 2 groom
+Fra:1 Mem:249.32M (Peak 249.32M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Ear L
+Fra:1 Mem:250.11M (Peak 250.11M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Upper eyelid L
+Fra:1 Mem:250.34M (Peak 250.34M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 3 groom
+Fra:1 Mem:253.27M (Peak 253.27M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Corneal shine L
+Fra:1 Mem:254.85M (Peak 254.85M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Pupil L
+Fra:1 Mem:256.95M (Peak 256.95M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Iris L
+Fra:1 Mem:257.43M (Peak 257.43M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Eye socket L
+Fra:1 Mem:263.00M (Peak 264.38M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:217.62M (Peak 264.38M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:217.62M (Peak 264.38M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:217.62M (Peak 264.38M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:217.71M (Peak 264.38M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:217.71M (Peak 264.38M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:217.71M (Peak 264.38M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:217.71M (Peak 264.38M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:217.71M (Peak 264.38M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:217.71M (Peak 264.38M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:217.71M (Peak 264.38M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:217.72M (Peak 264.38M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:217.72M (Peak 264.38M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:217.72M (Peak 264.38M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:217.72M (Peak 264.38M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:217.72M (Peak 264.38M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:224.36M (Peak 264.38M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:224.35M (Peak 264.38M) | Time:00:00.03 | Mem:6.65M, Peak:6.65M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:224.35M (Peak 264.38M) | Time:00:00.03 | Mem:6.65M, Peak:6.65M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:224.35M (Peak 264.38M) | Time:00:00.03 | Mem:33.97M, Peak:33.97M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:224.35M (Peak 264.38M) | Time:00:00.08 | Mem:68.65M, Peak:95.97M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:224.35M (Peak 264.38M) | Time:00:00.08 | Mem:68.65M, Peak:95.97M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:68.65M, Peak:95.97M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:95.63M, Peak:95.97M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:251.25M (Peak 264.38M) | Time:00:00.10 | Mem:95.63M, Peak:95.97M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:251.26M (Peak 264.38M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:251.26M (Peak 264.38M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:251.26M (Peak 264.38M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:251.26M (Peak 264.38M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:251.26M (Peak 264.38M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:251.26M (Peak 264.38M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:251.26M (Peak 264.38M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:297.84M (Peak 297.84M) | Time:00:00.29 | Remaining:00:04.37 | Mem:142.03M, Peak:142.03M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:317.37M (Peak 346.67M) | Time:00:07.71 | Mem:142.03M, Peak:142.03M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:317.37M (Peak 346.67M) | Time:00:07.71 | Mem:142.03M, Peak:142.03M | Scene, ViewLayer | Finished
+Saved: 'C:\Users\y'j'h\Desktop\安卓手机桌面宠物\model\qiuqiu-preview.png'
+Time: 00:07.87 (Saving: 00:00.14)
+
+Fra:24 Mem:199.90M (Peak 200.86M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Continuous feline skin
+Fra:24 Mem:199.90M (Peak 200.86M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Round skull groom
+Fra:24 Mem:199.90M (Peak 200.86M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Left cheek groom
+Fra:24 Mem:200.73M (Peak 200.86M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Foreleg L groom
+Fra:24 Mem:200.73M (Peak 200.86M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Lower foreleg L groom
+Fra:24 Mem:200.94M (Peak 200.94M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Haunch L groom
+Fra:24 Mem:204.41M (Peak 204.41M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Hind foot L groom
+Fra:24 Mem:208.95M (Peak 208.95M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Fur rim
+Fra:24 Mem:208.95M (Peak 208.95M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Foreleg R groom
+Fra:24 Mem:209.38M (Peak 209.38M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Eye catchlight
+Fra:24 Mem:210.08M (Peak 210.08M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Large soft key
+Fra:24 Mem:210.51M (Peak 210.51M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.013
+Fra:24 Mem:211.60M (Peak 211.60M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.012
+Fra:24 Mem:212.23M (Peak 212.23M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.011
+Fra:24 Mem:212.73M (Peak 212.73M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.010
+Fra:24 Mem:213.21M (Peak 213.21M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.009
+Fra:24 Mem:213.23M (Peak 213.23M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.008
+Fra:24 Mem:213.25M (Peak 213.25M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.007
+Fra:24 Mem:213.48M (Peak 213.48M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Mouth.001
+Fra:24 Mem:214.63M (Peak 214.63M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.006
+Fra:24 Mem:215.63M (Peak 215.63M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.005
+Fra:24 Mem:218.91M (Peak 218.91M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.004
+Fra:24 Mem:218.93M (Peak 218.93M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.003
+Fra:24 Mem:218.95M (Peak 218.95M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.002
+Fra:24 Mem:218.96M (Peak 218.96M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker.001
+Fra:24 Mem:219.07M (Peak 219.07M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Whisker
+Fra:24 Mem:219.09M (Peak 219.09M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Lower foreleg R groom
+Fra:24 Mem:219.09M (Peak 219.09M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Mouth
+Fra:24 Mem:220.49M (Peak 220.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Philtrum
+Fra:24 Mem:222.38M (Peak 222.38M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Triangular nose
+Fra:24 Mem:222.55M (Peak 222.55M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tongue
+Fra:24 Mem:228.10M (Peak 228.10M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Paw R groom
+Fra:24 Mem:228.35M (Peak 228.35M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Lower jaw
+Fra:24 Mem:233.27M (Peak 233.27M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Muzzle right
+Fra:24 Mem:235.00M (Peak 235.00M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Muzzle left
+Fra:24 Mem:235.12M (Peak 235.12M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Inner ear R
+Fra:24 Mem:235.35M (Peak 235.35M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Ear R
+Fra:24 Mem:238.06M (Peak 238.06M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Upper eyelid R
+Fra:24 Mem:238.38M (Peak 238.38M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Corneal shine R
+Fra:24 Mem:240.83M (Peak 240.83M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Pupil R
+Fra:24 Mem:240.95M (Peak 240.95M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Iris R
+Fra:24 Mem:241.06M (Peak 241.06M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Eye socket R
+Fra:24 Mem:241.18M (Peak 241.18M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Inner ear L
+Fra:24 Mem:241.72M (Peak 241.72M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Ear L
+Fra:24 Mem:241.82M (Peak 241.82M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Upper eyelid L
+Fra:24 Mem:241.94M (Peak 241.94M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Corneal shine L
+Fra:24 Mem:242.05M (Peak 242.05M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Pupil L
+Fra:24 Mem:242.15M (Peak 242.15M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Haunch R groom
+Fra:24 Mem:242.59M (Peak 242.59M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 0 groom
+Fra:24 Mem:242.88M (Peak 242.88M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Iris L
+Fra:24 Mem:243.96M (Peak 243.96M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Eye socket L
+Fra:24 Mem:244.06M (Peak 244.06M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 1 groom
+Fra:24 Mem:247.00M (Peak 247.00M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 3 groom
+Fra:24 Mem:253.70M (Peak 253.70M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tail volume 2 groom
+Fra:24 Mem:263.82M (Peak 266.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:24 Mem:218.03M (Peak 266.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:24 Mem:218.03M (Peak 266.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:24 Mem:218.03M (Peak 266.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:24 Mem:218.12M (Peak 266.46M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:24 Mem:218.12M (Peak 266.46M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:24 Mem:218.12M (Peak 266.46M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:24 Mem:218.12M (Peak 266.46M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:24 Mem:218.12M (Peak 266.46M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:24 Mem:218.12M (Peak 266.46M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:24 Mem:218.12M (Peak 266.46M) | Time:00:00.02 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:24 Mem:218.13M (Peak 266.46M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Particle Systems
+Fra:24 Mem:218.13M (Peak 266.46M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:24 Mem:218.13M (Peak 266.46M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Meshes
+Fra:24 Mem:218.13M (Peak 266.46M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:24 Mem:218.13M (Peak 266.46M) | Time:00:00.02 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:24 Mem:224.77M (Peak 266.46M) | Time:00:00.03 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:24 Mem:224.76M (Peak 266.46M) | Time:00:00.03 | Mem:6.65M, Peak:6.65M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:24 Mem:224.76M (Peak 266.46M) | Time:00:00.03 | Mem:6.65M, Peak:6.65M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:24 Mem:224.76M (Peak 266.46M) | Time:00:00.03 | Mem:33.97M, Peak:33.97M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:24 Mem:224.76M (Peak 266.46M) | Time:00:00.09 | Mem:68.65M, Peak:95.97M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:24 Mem:224.76M (Peak 266.46M) | Time:00:00.09 | Mem:68.65M, Peak:95.97M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:68.65M, Peak:95.97M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Objects Flags
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Images
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Camera Volume
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Lookup Tables
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.63M, Peak:95.97M | Scene, ViewLayer | Updating Lights
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.63M, Peak:95.97M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Integrator
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Film
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.55M, Peak:95.97M | Scene, ViewLayer | Updating Lookup Tables
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Baking
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:24 Mem:251.67M (Peak 266.46M) | Time:00:00.10 | Mem:95.64M, Peak:95.97M | Scene, ViewLayer | Sample 0/24
+Fra:24 Mem:298.25M (Peak 298.25M) | Time:00:00.32 | Remaining:00:04.99 | Mem:142.03M, Peak:142.03M | Scene, ViewLayer | Sample 1/24
+Fra:24 Mem:317.79M (Peak 347.08M) | Time:00:07.26 | Mem:142.03M, Peak:142.03M | Scene, ViewLayer | Sample 24/24
+Fra:24 Mem:317.79M (Peak 347.08M) | Time:00:07.26 | Mem:142.03M, Peak:142.03M | Scene, ViewLayer | Finished
+Saved: 'C:\Users\y'j'h\Desktop\安卓手机桌面宠物\model\qiuqiu-lying-preview.png'
+Time: 00:07.31 (Saving: 00:00.04)
+
+
+
+Blender quit

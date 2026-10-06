@@ -1,0 +1,9 @@
+.gradle/
+local.properties
+**/build/
+.idea/
+
+.tools/
+checks/out/
+
+checks/android-compile/

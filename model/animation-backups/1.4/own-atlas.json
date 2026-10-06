@@ -1,0 +1,108 @@
+{
+  "tool": "built-in imagegen",
+  "identity": "User photographs of Qiuqiu; no existing Codex pet atlas used",
+  "own": {
+    "rows": [
+      0,
+      262,
+      521,
+      784,
+      984,
+      1194,
+      1536
+    ],
+    "ground": [
+      253,
+      513,
+      761,
+      963,
+      1183,
+      1502
+    ],
+    "states": [
+      "sit",
+      "groom",
+      "lie",
+      "walk",
+      "run",
+      "happy"
+    ],
+    "columns": 4
+  },
+  "care": {
+    "columns": 2,
+    "rows": [
+      0,
+      346,
+      740,
+      1134,
+      1536
+    ],
+    "ground": [
+      344,
+      738,
+      1131,
+      1515
+    ],
+    "states": [
+      "kibble",
+      "treat",
+      "chocolate",
+      "disgust"
+    ]
+  },
+  "prompts": {
+    "own": "Use case: stylized-concept. Production transparent sprite atlas for an Android pet.\nReference images show the user's actual cat Qiuqiu. Recreate HIS own white/silver longhair cat: round flat face, small grey triangular nose, enormous glossy dark eyes with faint olive iris, silver ear tips, fluffy mane and large fluffy tail, natural feline proportions. No forehead curler or accessories. Photorealistic premium soft 3D-render appearance, fine layered fur strands, natural paws, subtle shadows on fur, clear readable silhouette. Not a cartoon, not an existing app mascot.\nOUTPUT exactly 1024x1536 transparent RGBA, precisely regular grid 4 columns x 6 rows, cells 256x256. ONE whole cat per cell, centered with paw ground at y=232 within each cell and safe 16px margins. No labels, lines, background or shadow plane. Every tail/paw fits inside its own cell. Same camera and lighting throughout. Each row four ordered animation phases with stable body scale:\nRow1 sitting front three-quarter, looking left, center, right, center; ears and eyes naturally move.\nRow2 grooming: raise front paw, lick it, rub cheek, return paw. Tongue subtle pink.\nRow3 LYING as second photo: body low, front paws extended, chin lowered almost onto paws, sleepy eyelids. Fluffy tail grows from REAR of body and stands UPRIGHT behind, swaying gently left, center, right, center with curved trailing tip; do not animate whole body.\nRow4 walking right side-profile slow four-legged walking cycle four phases, feet alternate, tail relaxed.\nRow5 running right side-profile actual gallop four phases: gather hind legs, push off, flight stretch, land. Clearly different from walk, not merely speedup.\nRow6 happy: eyes smiling, lift paws slightly, joyful head tilt, relax.\nMaintain the cat identity from photos. Clean silhouettes separated by transparent space. No pink forehead object.",
+    "food": "Transparent PNG sprite sheet: TWO columns and FOUR rows, 1024x1536, eight full-cat frames. Photorealistic soft 3D render of the same round-faced fluffy white silver longhair Persian cat in all eight frames, dark glossy olive-black eyes, little grey nose, silver tipped ears, fluffy white tail. No accessories, no background, no captions, clear margins in each cell.\nRow1 pair: eating kibble from a shallow ceramic bowl; first cat's head dips into the kibble, second lifts slightly to chew.\nRow2 pair: licking a pink-and-white cat treat tube held next to muzzle by its front paw; first tongue licks the tube, second bites it gently.\nRow3 pair: nibbling a small rectangular brown virtual chocolate bar held by its front paw; first bites, second chews, chocolate visible.\nRow4 pair: disgusted reaction, first eyes squint and ears draw back, second recoils and turns head away with tongue out.\nEach pair is two consecutive natural animation poses of the same cat, stable camera, size and ground line. Fine real-looking fur strands, natural animal proportions, premium desktop pet style. Every cat and food is fully inside its own transparent cell.",
+    "toilet": "A photorealistic soft 3D render animation sprite sheet of one beautiful round-faced white silver longhair Persian cat. Small grey triangular nose, huge glossy black-olive eyes, silver ear tips, fluffy fur and tail, natural feline body. No accessories. Transparent 1024x1024 PNG in exact TWO columns and TWO rows of 512px cells, one whole cat centered in each cell, paws on same ground level, no labels, no background, no shadows on floor.\nThe four frames show bathroom squat poses for an Android desktop pet, later composited inside a litter tray:\nTop left: side three-quarter cat squats with hindquarters low and tail raised, calmly urinating.\nTop right: same cat in same pose, small relaxed adjustment of hips and tail after urinating.\nBottom left: same cat with back noticeably arched, hindquarters tucked low, tail raised curved, defecating squat.\nBottom right: same cat relaxes from that squat and scratches with one paw.\nNo litter tray or waste in these images, those are separately composited game props. Same cat, same camera and consistent scale and fine white fur in all cells, clean transparent margins.",
+    "props": "Use case: stylized-concept. Transparent production game props for photorealistic white longhair desktop cat.\nExactly 1024x1024 RGBA, precise 2x2 grid each cell 512px, generous margins, transparent backdrop no text no captions no ground shadow.\nTOP LEFT: a single empty low wide oval cat litter tray, muted sage green satin plastic, viewed front three-quarter with slightly elevated camera, granular beige sand visible, dimensions width440 height170 centered at x256 y270. Realistic render.\nTOP RIGHT: one realistic human RIGHT HAND holding a teal slotted cat litter scoop by the pale wooden handle, short wrist section angled down from upper right, scoop face facing camera angled into sand, full fingers clearly curl around handle, no disconnected floating parts. Entire hand/scoop fits within440px at center. Match tray camera and lighting.\nBOTTOM LEFT: one beige urine clump in cat litter, lumpy compact granular shape not liquid, centered, diameter170px.\nBOTTOM RIGHT: one small brown cat poop piece, naturally rounded elongated shape, centered, width160px. Tasteful realistic game prop.\nHigh quality soft 3D render, subtle highlights, physically plausible texture, isolated objects only. No cat, no floor, no arbitrary background.",
+    "disgustV2": "Use case: stylized-concept. Asset type: transparent photorealistic Android desktop cat animation sprite sheet. Input image is identity/style REFERENCE, not layout to copy. Create a NEW square sprite sheet exactly TWO columns by TWO rows (four equally sized square cells), actual transparent RGBA background. The SAME fluffy silver white longhair Persian cat as the reference, round flat face, huge dark olive eyes, grey nose, soft detailed realistic fur. No food, no accessories, no text, no floor. Full cat in every cell, head and ears and tail fully inside with 8% transparent margins. Fixed front three-quarter camera, fixed cat size, stationary front paws and haunches, same paw baseline in each cell. Tail resting beside body. Natural cat disgust, no exaggerated cartoon acting. TOP LEFT: anticipatory disgust, eyes narrowing, ears flattening slightly sideways/back, chin drawn back into fluffy neck, mouth closed. TOP RIGHT: recoil, neck pulls back and head turns modestly to viewer's right, eyes squinted, ears back; paws stay on ground. BOTTOM LEFT: brief small pink tongue sticking out as cat turns head to viewer's right in aversion, NOT a huge dangling tongue, no raised paw, shoulders still stable. BOTTOM RIGHT: recovery, tongue fully retracted, mouth closed, head returns almost forward, eyes reopen half way and ears relax. All four poses depict a continuous short reaction, identity and silhouette remain consistent especially body and paw locations. Maintain premium realistic 3D-render appearance matching reference fur, not a cartoon. Four isolated whole cats evenly separated on genuinely transparent background.",
+    "neckOwn": "Use case: precise-object-edit. Edit target: the attached ORIGINAL Qiuqiu animation sheet. Make ONE subtle anatomical refinement to EVERY cat: slightly slim the neck and neck ruff beneath the jaw, about 10-12 percent, to show a short natural feline neck connecting the round head to shoulders. Keep the long fluffy white/silver fur, but let the two sides of the neck taper inward gently below the cheeks and flare outward again at the shoulders. Show a subtle under-chin shadow and gentle fur flow so the neck is readable. This is a slight refinement, NOT a thin shaven neck or long giraffe neck. Preserve the EXACT original round face, huge dark glossy olive eyes, little grey nose, silver ear tips, fur texture and realistic soft 3D-render style. Do NOT turn into a generic Persian, change identity, enlarge head or shorten legs. Preserve all TWENTY FOUR cats in precisely the existing 4-column 6-row layout and row heights, every sitting/grooming/lying/walking/running/happy pose and upright lying tail. Keep image portrait 1024x1536. ALL positions, paw baselines, camera, body proportions, limb/tail placement, framing, expressions, props and cell boundaries are invariant. Change ONLY the neck ruff silhouette and under-chin definition. No added objects, no labels, no grid lines, no floor or background, keep genuinely transparent alpha. Entire sprite must remain within original location with no touching neighboring sprites.",
+    "neckCare": "Use case: precise-object-edit. Edit target: the attached ORIGINAL Qiuqiu animation sheet. Make ONE subtle anatomical refinement to EVERY cat: slightly slim the neck and neck ruff beneath the jaw, about 10-12 percent, to show a short natural feline neck connecting the round head to shoulders. Keep the long fluffy white/silver fur, but let the two sides of the neck taper inward gently below the cheeks and flare outward again at the shoulders. Show a subtle under-chin shadow and gentle fur flow so the neck is readable. This is a slight refinement, NOT a thin shaven neck or long giraffe neck. Preserve the EXACT original round face, huge dark glossy olive eyes, little grey nose, silver ear tips, fur texture and realistic soft 3D-render style. Do NOT turn into a generic Persian, change identity, enlarge head or shorten legs. Preserve all EIGHT cats in precisely the existing 2-column 4-row layout and row heights, all bowls, treat tubes and chocolate, eating expressions and paws. Keep image portrait 1024x1536. ALL positions, paw baselines, camera, body proportions, limb/tail placement, framing, expressions, props and cell boundaries are invariant. Change ONLY the neck ruff silhouette and under-chin definition. No added objects, no labels, no grid lines, no floor or background, keep genuinely transparent alpha. Entire sprite must remain within original location with no touching neighboring sprites.",
+    "neckToilet": "Use case: precise-object-edit. Edit target: the attached ORIGINAL Qiuqiu animation sheet. Make ONE subtle anatomical refinement to EVERY cat: slightly slim the neck and neck ruff beneath the jaw, about 10-12 percent, to show a short natural feline neck connecting the round head to shoulders. Keep the long fluffy white/silver fur, but let the two sides of the neck taper inward gently below the cheeks and flare outward again at the shoulders. Show a subtle under-chin shadow and gentle fur flow so the neck is readable. This is a slight refinement, NOT a thin shaven neck or long giraffe neck. Preserve the EXACT original round face, huge dark glossy olive eyes, little grey nose, silver ear tips, fur texture and realistic soft 3D-render style. Do NOT turn into a generic Persian, change identity, enlarge head or shorten legs. Preserve all FOUR cats in precisely the existing 2-column 2-row square layout, all squatting poses, raised tails and scratching paw. Keep square image. ALL positions, paw baselines, camera, body proportions, limb/tail placement, framing, expressions, props and cell boundaries are invariant. Change ONLY the neck ruff silhouette and under-chin definition. No added objects, no labels, no grid lines, no floor or background, keep genuinely transparent alpha. Entire sprite must remain within original location with no touching neighboring sprites.",
+    "disgustV3": "Use case: stylized-concept. Asset: photorealistic cat reaction sprite sheet, actual transparent background. Reference image is Qiuqiu's ORIGINAL identity sheet. Match the cat in the FIRST ROW, SECOND COLUMN EXACTLY: youthful round face, round open dark olive-black eyes, tiny grey nose, upright silver-tipped ears, white silver longhaired fur, petite natural feline proportions. Do NOT substitute a bulky flat-faced generic Persian or widen the head. Produce FOUR whole-cat poses in a clean 2-column 2-row square sprite sheet. ALL four cats use the same fixed forward/front-three-quarter camera, same scale, same planted paws and haunches and tail curled on viewer's left, generous empty transparent margins. Neck ruff slightly slimmed 10-12%, short but clearly readable natural neck below jaw, under-chin shadow, fur curves inwards then out over shoulders. Neck must remain visible in EVERY expression; no head sunk into chest or shoulders, no long bare neck. TOP LEFT: mild disgust, eyes narrow but not tightly shut, ears slightly sideways/back, mouth closed, neck remains upright. TOP RIGHT: gently pull the head back just a little and turn to viewer's right, neck remains defined and elongated enough to connect jaw and shoulders, eyelids narrowed. BOTTOM LEFT: same turned head, a SHORT small pink tongue briefly sticking out, no raised paws and no cartoon grimace. BOTTOM RIGHT: tongue retracted and mouth closed, head returns forward, eyes and ears relaxed like original sitting cat. Keep body, paw baseline, limbs and tail absolutely identical across all frames. Only head rotation, eyelids, ears and mouth vary. Detailed realistic soft fur and soft 3D lighting EXACTLY match reference. No props, no accessories, no text, no backdrop, no ground shadow, no floor."
+  },
+  "toilet": {
+    "columns": 2,
+    "rows": [
+      0,
+      642,
+      1254
+    ],
+    "ground": [
+      610,
+      1200
+    ],
+    "states": [
+      "pee",
+      "poop"
+    ]
+  },
+  "disgust": {
+    "columns": 2,
+    "rows": [
+      0,
+      630,
+      1254
+    ],
+    "ground": [
+      574,
+      1198
+    ],
+    "states": [
+      "recoil",
+      "aversion",
+      "tongue",
+      "recover"
+    ],
+    "durationSeconds": 2.8,
+    "tongueHoldSeconds": 0.28,
+    "poseStartSeconds": [
+      0,
+      0.56,
+      1.22,
+      1.5
+    ]
+  },
+  "refinement": "1.4: slightly slimmer natural neck; original cat identity preserved; single-face reaction"
+}

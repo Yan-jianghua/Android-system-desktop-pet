@@ -1,0 +1,13 @@
+from pathlib import Path
+p=Path('app/src/main/assets/pet-sprites/index.html');s=p.read_text(encoding='utf-8')
+s=s.replace("atlas=new Image(),nav=", "atlas=new Image(),actions=new Image(),nav=")
+s=s.replace("atlas.src='qiuqiu.webp';", "atlas.src='qiuqiu.webp';actions.src='actions.png';")
+s=s.replace("function tail(t)", "function actionSprite(row,col){c.drawImage(actions,col*256,row*256,256,256,-8,12,208,208)}function tail(t)")
+s=s.replace("if(!ready)return", "if(!ready||!actions.complete||!actions.naturalWidth)return")
+s=s.replace("if(toilet){oval", "if(toilet&&mode==='clean'){oval")
+s=s.replace("c.translate(24,toilet?-15:0);let row=0,col=0", "c.translate(24,mode==='clean'?-15:0);let row=0,col=0;const custom=['lie','eat','pee','poop'].includes(mode)")
+s=s.replace("tail(t);row=5;col=5;c.translate(0,Math.sin(t*1.6)*.7)", "row=0;col=Math.floor(elapsed*1.2)%4")
+s=s.replace("row=8;col=[1,2,4,5][Math.floor(elapsed*6)%4]", "row=food==='猫粮'?1:food==='猫条'?2:3;col=Math.floor(elapsed*5)%4")
+s=s.replace("row=5;col=4;c.translate(0,Math.sin(t*4))", "row=mode==='pee'?4:5;col=Math.floor(elapsed*2)%4")
+s=s.replace("sprite(row,col);c.restore();if(mode==='eat'){oval(120,196,59,12,'#9eafb2');if(food==='猫条')line(140,177,133,193,'#cf90a8',10);else for(let i=0;i<5;i++)oval(102+i*9,190,8,7,food==='巧克力'?'#593526':'#c3975d')}", "if(custom)actionSprite(row,col);else sprite(row,col);c.restore();")
+p.write_text(s,encoding='utf-8')

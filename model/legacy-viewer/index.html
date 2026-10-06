@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{display:block}#error{position:absolute;bottom:5px;font:12px sans-serif;color:#88634c}</style></head><body><div id="error"></div><script type="module">
+import * as THREE from './three.module.js';
+import {GLTFLoader} from './GLTFLoader.js';
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
+renderer.setClearColor(0,0);renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(32,1,.01,100);
+camera.position.set(2.1,1.55,3.8);camera.lookAt(.05,.78,0);
+scene.add(new THREE.HemisphereLight(0xf5f6ff,0x9b8f77,2));
+for(const [x,y,z,intensity] of [[-3,5,4,3],[3,2,3,1.5],[0,3,-3,2]]){const light=new THREE.DirectionalLight(0xffffff,intensity);light.position.set(x,y,z);scene.add(light)}
+let model,mixer,current='',action,requested={mode:'sit',facing:1,food:'',urine:0,poop:0},paused=false;
+const actions={};const props=new THREE.Group();scene.add(props);
+function mesh(geometry,color,rough=.65){return new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color,roughness:rough}))}
+const tray=new THREE.Group();const base=mesh(new THREE.BoxGeometry(1.2,.12,.9),0xa7b7af);base.position.y=.04;tray.add(base);
+const sand=mesh(new THREE.BoxGeometry(1.10,.025,.81),0xdac5a6);sand.position.y=.115;tray.add(sand);
+for(const [x,z,w,d] of [[-.59,0,.04,.91],[.59,0,.04,.91],[0,-.43,1.22,.04],[0,.43,1.22,.04]]){const wall=mesh(new THREE.BoxGeometry(w,.18,d),0x97aaa0);wall.position.set(x,.09,z);tray.add(wall)}
+props.add(tray);tray.visible=false;
+const deposits=new THREE.Group();tray.add(deposits);
+function waste(){deposits.children.slice().forEach(o=>{deposits.remove(o);o.geometry.dispose();o.material.dispose()});for(let i=0;i<Math.min(requested.urine+requested.poop,20);i++){const isUrine=i<requested.urine,o=mesh(new THREE.SphereGeometry(.04,10,7),isUrine?0xa39565:0x654631);o.scale.set(isUrine?1.5:1,.5,isUrine?1:1.6);o.position.set(-.42+(i%6)*.15,.145,-.30+Math.floor(i/6)*.15);deposits.add(o)}}
+const bowl=mesh(new THREE.CylinderGeometry(.17,.13,.08,24),0x88a5a6);bowl.position.set(0,.05,.55);props.add(bowl);bowl.visible=false;
+const meals=new THREE.Group();meals.position.set(0,.10,.55);props.add(meals);meals.visible=false;
+const scoop=new THREE.Group();const handle=mesh(new THREE.CylinderGeometry(.016,.016,.45,10),0xb08b6b);handle.position.y=.30;scoop.add(handle);
+const shovel=mesh(new THREE.BoxGeometry(.15,.015,.17),0x789397);shovel.position.y=.09;scoop.add(shovel);const hand=mesh(new THREE.SphereGeometry(.055,16,10),0xe4b79a);hand.scale.set(.7,1.1,1);hand.position.y=.49;scoop.add(hand);props.add(scoop);scoop.visible=false;
+window.setPetState=s=>{const changed=s.urine!==requested.urine||s.poop!==requested.poop;requested=s;if(changed)waste();if(!mixer)return;let name=actions[s.mode]?s.mode:'sit';if(name!==current){const next=actions[name];if(action)action.fadeOut(.22);next.reset().fadeIn(.22).play();action=next;current=name}tray.visible=['clean','pee','poop'].includes(s.mode);scoop.visible=s.mode==='clean';bowl.visible=meals.visible=s.mode==='eat';if(meals.userData.food!==s.food){meals.children.slice().forEach(o=>{meals.remove(o);o.geometry.dispose();o.material.dispose()});meals.userData.food=s.food;if(s.food==='猫条'){const strip=mesh(new THREE.CylinderGeometry(.025,.025,.24,12),0xd897a8);strip.rotation.z=.75;strip.position.set(.14,.09,0);meals.add(strip)}else for(let i=0;i<6;i++){const piece=mesh(new THREE.BoxGeometry(.035,.025,.035),s.food==='巧克力'?0x5b3424:0xab753e);piece.position.set(Math.sin(i)*.075,0,Math.cos(i)*.075);meals.add(piece)}}if(model)model.rotation.y=['walk','run'].includes(s.mode)?s.facing<0?-.6:.6:0};
+window.setPetPaused=v=>paused=v;
+new GLTFLoader().load('./qiuqiu.glb',g=>{model=g.scene;scene.add(model);mixer=new THREE.AnimationMixer(model);g.animations.forEach(clip=>actions[clip.name]=mixer.clipAction(clip));model.traverse(o=>{if(o.isMesh){o.frustumCulled=false;o.material.side=THREE.DoubleSide}});window.setPetState(requested);window.petReady=true},undefined,e=>{document.getElementById('error').textContent='3D 模型加载失败';console.error(e)});
+function resize(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;const zoom=Math.max(1,.85/camera.aspect);camera.position.set(2.1*zoom,1.55*zoom,3.8*zoom);camera.lookAt(.05,.78,0);camera.updateProjectionMatrix()}addEventListener('resize',resize);resize();
+if(location.search.includes('preview')){const controls=document.createElement('div');controls.style.cssText='position:absolute;bottom:10px;left:10px;right:10px;display:flex;flex-wrap:wrap;gap:6px';for(const [label,mode] of [['坐着','sit'],['趴着摇尾','lie'],['舔毛','groom'],['走路','walk'],['跑步','run'],['吃猫条','eat'],['开心','happy'],['嫌弃','disgust'],['尿尿','pee'],['便便','poop'],['铲屎','clean']]){const b=document.createElement('button');b.textContent=label;b.style.cssText='min-height:36px;padding:6px 10px';b.onclick=()=>window.setPetState({mode,facing:1,food:'猫条',urine:2,poop:1});controls.append(b)}document.body.append(controls)}
+let last=0;function frame(ms){requestAnimationFrame(frame);if(paused)return;if(ms-last<33)return;const dt=Math.min((ms-last)/1000,.1);last=ms;if(mixer)mixer.update(dt);if(scoop.visible){scoop.position.set(Math.sin(ms/300)*.30,.1,.30);scoop.rotation.z=Math.sin(ms/300)*.3}renderer.render(scene,camera)}requestAnimationFrame(frame);
+</script></body></html>
+

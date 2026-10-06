@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>球球 · 随身小猫</title><style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 20%,#fffef8 0,#f2f1e8 48%,#e5ebdf 100%);color:#49463f;font:14px system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px 24px}
+header{text-align:center}header::before{content:"QIUQIU · LITTLE COMPANION";display:block;letter-spacing:3px;font-size:10px;color:#7c8b70;margin-bottom:12px}h1{font-size:32px;font-weight:600;margin:0 0 7px}header p{margin:0;color:#79736c}
+#pet-wrap{position:relative;width:min(203px,58vw);height:275px}
+#speech{position:absolute;display:table;min-height:0;min-width:48px;width:auto;max-width:min(180px,82vw);text-align:center;padding:10px 15px;line-height:1.7;top:0;left:0;right:0;margin:0 auto;background:#fffaf2;border:1px solid #dfd4c5;border-radius:18px;box-shadow:0 4px 12px #53412c0c;overflow-wrap:anywhere;z-index:4}
+#speech::after{content:"";position:absolute;width:14px;height:14px;left:50%;bottom:-8px;background:#fffaf2;border-right:1px solid #dfd4c5;border-bottom:1px solid #dfd4c5;border-bottom-right-radius:3px;transform:translateX(-50%) rotate(45deg)}
+#speech:empty{visibility:hidden}
+canvas{width:min(203px,58vw);height:auto;touch-action:none;cursor:grab;display:block}canvas:active{cursor:grabbing}
+#pet-stage{position:absolute;top:55px;left:0;width:203px;height:210px;display:flex;justify-content:center;align-items:flex-start}
+#panel{position:absolute;top:0;left:0;width:203px;height:210px;padding:0;display:block;z-index:3;background:transparent;border:0;min-width:0}
+#panel button{position:absolute;width:40px;height:40px;min-height:40px;padding:0;border-radius:50%;font-size:0;display:grid;place-items:center;background:#fffdf8eF;box-shadow:0 4px 12px #53412c18}
+#panel button::before{font-size:20px;line-height:1}
+#panel button:nth-child(1){left:105px;top:0}#panel button:nth-child(2){left:25px;top:76px}#panel button:nth-child(3){left:105px;top:158px}#panel button:nth-child(4){right:25px;top:76px}#panel button:nth-child(5){right:25px;top:158px}#panel button:nth-child(6){left:25px;top:158px}
+#panel button[aria-label="喂食"]::before{content:"🍚"}#panel button[aria-label="铲屎 · 便便 0 / 尿团 0"]::before,#panel button[aria-label^="铲屎"]::before{content:"🧹"}#panel button[aria-label="对话"]::before{content:"💬"}#panel button[aria-label="陪球球玩"]::before,#panel button[aria-label="摸摸球球"]::before{content:"♡"}#panel button[aria-label="今日悄悄话"]::before{content:"☀"}#panel button[aria-label="让球球回家"]::before{content:"⌂"}#panel button[aria-label="收起"]::before{content:"×"}#panel button[aria-label="返回"]::before{content:"↩"}#panel button[aria-label="猫粮"]::before{content:"🍚"}#panel button[aria-label="猫条"]::before{content:"";display:block;width:12px;height:24px;border-radius:6px 6px 3px 3px;background:#f09bb2;box-shadow:0 -4px 0 -1px #fff1f5}#panel button[aria-label="巧克力"]::before{content:"🍫"}#panel button[aria-label="知道啦"]::before{content:"✓"}#panel button[aria-label="发送"]::before{content:"➤"}
+#panel.dialogue-mode{height:32px}#panel.dialogue-mode input{position:absolute;left:57px;top:0;width:136px;height:32px;min-height:32px;font-size:12px;padding:0 6px}#panel.dialogue-mode button{width:28px;height:28px;min-height:28px}#panel.dialogue-mode button:nth-child(2){left:198px;top:2px}#panel.dialogue-mode button:nth-child(3){left:24px;top:2px}#panel.dialogue-mode button::before{font-size:16px}
+#panel.below-mode{height:auto;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}#panel.below-mode button{position:static;width:32px;height:32px;min-height:32px}#panel.below-mode p{font-size:12px;white-space:pre-line}
+button{font:inherit;color:inherit;background:#f0f3e9;border:1px solid #d0cbc1;border-radius:12px;padding:10px 15px;cursor:pointer;min-height:42px}button:hover{background:#e2ead7;transform:translateY(-1px)}button{transition:background .2s,transform .2s}button:focus-visible{outline:2px solid #80936c;outline-offset:3px}button:disabled{opacity:.55}
+#panel[hidden]{display:none}
+#bond{font-size:12px;letter-spacing:.4px;color:#6a7b5c;background:#eaf0e1;border:1px solid #dce5d1;padding:8px 15px;border-radius:30px;margin:6px 0 12px}#memory{margin:8px 6px 16px;color:#7b736a;font-size:13px}input{font:inherit;min-height:42px;border:1px solid #cfc5b7;border-radius:10px;padding:8px;width:210px}#panel p{width:100%;text-align:center;line-height:1.8;margin:0}
+details{max-width:430px;width:100%;margin-top:15px;color:#79736c;font-size:12px}summary{cursor:pointer;text-align:center}details>div{padding:12px;display:flex;flex-wrap:wrap;gap:7px;justify-content:center}footer{font-size:12px;color:#8d857b;max-width:380px;text-align:center;line-height:1.7;margin-top:18px}
+</style></head><body>
+<header><h1>球球</h1><p>把软乎乎的陪伴，放在身边</p></header>
+<div id="pet-wrap"><div id="speech" aria-live="polite"></div><div id="pet-stage"><canvas width="768" height="768" aria-label="球球正在坐着左右看，点击可以喂食、铲屎或对话"></canvas><div id="panel" hidden></div></div></div>
+<div id="bond"></div><div id="memory"></div>
+<details><summary>预览中的时间与动作检查</summary><div id="checks"></div><div><label>节日日期 <input type="date" id="date"></label><button id="today">今天</button></div><div id="status"></div></details>
+<footer>球球待机时会自动随机舔毛、趴着摇尾巴、坐着左右看。轻点球球打开菜单，拖动可以走路。在「陪球球玩」里摸摸、看每日悄悄话。亲密度和猫砂盆记录都会保留。此处是电脑预览；手机请安装新版 APK。</footer>
+<script src="care.js"></script><script src="motion-mesh.js"></script><script src="motion-renderer.js"></script><script src="preview.js"></script></body></html>
+
+

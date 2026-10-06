@@ -1,0 +1,14 @@
+Version: 1.4-neck (versionCode 5), minSdk 26, targetSdk 35
+PASS: Android assembleDebug and lintDebug; no errors
+PASS: APK v2 signature verification
+PASS: 40 sprite frames: transparent alpha, nonempty frames, actual row/ground coordinates
+PASS: preview.js syntax
+PASS: MemoryCheck, CalendarCheck, browser preview care/calendar logic
+PASS: Browser visual checks of sitting, disgust and chocolate-to-disgust transition
+PASS: Chocolate finishes eating after 5 seconds; says 狗屎东西 and starts the new reaction; cooldown remains 10 seconds
+PASS: No browser console errors
+Final APK: dist/球球桌面宠物-新版.apk
+SHA256: 156B9D0168550CEE1ACA31752D1C7C2ADE787F6ADEFE1BB3AC97A7E8F22DB072
+Preview: reference-video/球球-颈部优化-预览.jpg
+All final generation prompts/assets: model/颈部优化素材记录.json
+Android handset not connected; real-device rendering, overlay permissions and TTS remain unverified.

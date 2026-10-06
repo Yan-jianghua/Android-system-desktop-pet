@@ -1,0 +1,19 @@
+{
+  "bones": 24,
+  "clips": [
+    "sit",
+    "lie",
+    "groom",
+    "walk",
+    "run",
+    "eat",
+    "happy",
+    "disgust",
+    "pee",
+    "poop",
+    "clean"
+  ],
+  "meshes": 57,
+  "vertices": 578700,
+  "reference": "Four user supplied photographs; procedural photo-guided reconstruction, not photogrammetry"
+}

@@ -1,0 +1,14 @@
+Version: 1.5-text (versionCode 9), minSdk 26, targetSdk 35
+PASS: Android assembleDebug and lintDebug (0 errors, 5 warnings)
+PASS: MemoryCheck and CalendarCheck
+PASS: ActionCheck: care interruption/resumption, preserved animation progress, reactions once, cleaning counts and boundary behavior
+PASS: preview-check.cjs and interaction-check.cjs (real preview controller: menu-open priority toilet and busy drag)
+PASS: preview.js syntax; no TTS/speechSynthesis code in app sources
+PASS: Browser menu-open toilet and cat-treat resumption visual checks; no voice control; no console errors
+PASS: APK v2 signature, version metadata, packaged HTML/JS equality and no Android TTS reference in DEX
+Final APK: dist/球球桌面宠物-新版.apk
+SHA256: CCE00B3C9920C2EA03A5E7B6DE3905471A8AFE6ACD2EBA26B1C1941AF8DBAF7E
+Previous APK: dist/旧版备份/球球桌面宠物-1.4.3.apk
+Preview: reference-video/球球-纯文字-最终预览.png
+Review details: checks/功能复查-1.5.md
+Android handset not connected: overlay permission, wake/unlock broadcasts, lockscreen display and long-running service behavior remain unverified.

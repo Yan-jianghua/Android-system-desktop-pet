@@ -1,0 +1,35 @@
+package com.qiuqiu.pet;
+import android.content.Context;
+import android.graphics.*;
+import android.view.View;
+
+/** Procedural layered animation keeps the floating window transparent. */
+public class CatView extends View {
+ public String mode="sit",food="";public int facing=1,urine,poop;public boolean tray;final Paint p=new Paint(3);final Path tail=new Path(),ears=new Path(),inner=new Path(),nose=new Path();static final int[] SIDES={-1,1};final long start=android.os.SystemClock.uptimeMillis();
+ public CatView(Context c){super(c);setLayerType(View.LAYER_TYPE_SOFTWARE,null);}
+ @Override public boolean performClick(){super.performClick();return true;}
+ void oval(Canvas c,float x,float y,float w,float h,int color){p.setColor(color);p.setStyle(Paint.Style.FILL);c.drawOval(x-w/2,y-h/2,x+w/2,y+h/2,p);}
+ void line(Canvas c,float x,float y,float a,float b,int color,float width){p.setColor(color);p.setStrokeWidth(width);p.setStrokeCap(Paint.Cap.ROUND);c.drawLine(x,y,a,b,p);}
+ void text(Canvas c,String s,float x,float y,int size,int color){p.setColor(color);p.setTextSize(size);p.setTextAlign(Paint.Align.CENTER);c.drawText(s,x,y,p);}
+ protected void onDraw(Canvas c){super.onDraw(c);float t=(android.os.SystemClock.uptimeMillis()-start)/1000f;float wave=(float)Math.sin(t*4);c.save();c.scale(getWidth()/240f,getHeight()/190f);boolean toilet=tray||mode.equals("clean");
+ if(toilet){oval(c,120,166,202,40,0xffabb9b2);oval(c,120,158,190,32,0xffe0cdb1);for(int i=0;i<Math.min(urine,12);i++)oval(c,42+(i*23)%150,155+(i%2)*7,14,9,0xffa89b71);for(int i=0;i<Math.min(poop,12);i++)oval(c,50+(i*31)%145,157-(i%2)*7,15,8,0xff71533b);}
+ c.save();c.translate(120,toilet?-14:0);if(mode.equals("walk")||mode.equals("run"))c.scale(facing,1);
+ boolean lie=mode.equals("lie"),moving=mode.equals("walk")||mode.equals("run");float step=(float)Math.sin(t*(mode.equals("run")?22:9));float bodyY=lie?139:119;
+ p.setColor(0xffdddcd5);p.setStrokeWidth(22);p.setStyle(Paint.Style.STROKE);p.setStrokeCap(Paint.Cap.ROUND);tail.reset();tail.moveTo(30,bodyY+14);tail.cubicTo(98,bodyY+30,94,85+wave*(lie?17:8),65,100+wave*12);c.drawPath(tail,p);p.setStyle(Paint.Style.FILL);
+ oval(c,0,bodyY,lie?139:96,lie?49:88,0xfff3f0e8);oval(c,-28,153+(moving?step*9:0),31,18,0xfff9f7ef);oval(c,28,153-(moving?step*9:0),31,18,0xfff9f7ef);
+ float headY=lie?117:76;if(mode.equals("eat"))headY+=14+wave*4;if(mode.equals("pee")||mode.equals("poop"))headY+=8+wave*2;
+ c.save();c.translate(mode.equals("sit")?wave*3:0,headY);if(mode.equals("disgust"))c.rotate(wave*8);
+ ears.reset();ears.moveTo(-47,-10);ears.lineTo(-44,-59);ears.lineTo(-14,-35);ears.lineTo(14,-35);ears.lineTo(44,-59);ears.lineTo(47,-10);ears.close();p.setColor(0xffeeeae1);c.drawPath(ears,p);inner.reset();inner.moveTo(-39,-26);inner.lineTo(-38,-47);inner.lineTo(-23,-33);inner.close();inner.moveTo(39,-26);inner.lineTo(38,-47);inner.lineTo(23,-33);inner.close();p.setColor(0xffd3bdb6);c.drawPath(inner,p);
+ oval(c,0,0,113,91,0xfff5f2ea);for(int i=0;i<18;i++){double a=i*Math.PI*2/18;line(c,(float)Math.cos(a)*49,(float)Math.sin(a)*36,(float)Math.cos(a)*59,(float)Math.sin(a)*45,0xfff5f2ea,4);}
+ boolean blink=t%5>4.8||mode.equals("happy")||mode.equals("lie");for(int side:SIDES){float x=side*23;if(blink)line(c,x-10,0,x+10,-2,0xff383933,3);else{oval(c,x,-3,25,29,0xff393c34);oval(c,x,-3,18,23,0xff748174);oval(c,x,-3,14,22,0xff101b18);oval(c,x-4,-10,6,7,Color.WHITE);}}
+ nose.reset();nose.moveTo(-7,13);nose.lineTo(7,13);nose.lineTo(0,20);nose.close();p.setColor(0xff6a5757);c.drawPath(nose,p);line(c,0,20,0,25,0xff76635f,1.5f);line(c,0,25,-7,28,0xff76635f,1.5f);line(c,0,25,7,28,0xff76635f,1.5f);
+ for(int i=0;i<3;i++){line(c,-14,18+i*5,-54,14+i*9,0xffbcbab1,1);line(c,14,18+i*5,54,14+i*9,0xffbcbab1,1);}if(mode.equals("groom")){oval(c,-22,30+wave*3,23,26,0xfffdfaf3);oval(c,-10,25,9,11,0xffe6a4a8);}c.restore();c.restore();
+ if(mode.equals("eat")){int color=food.equals("巧克力")?0xff69432c:food.equals("猫条")?0xffdd9eaf:0xffd5aa62;oval(c,120,169,57,13,0xffbac5c3);if(food.equals("猫条")){line(c,151,140,133,163,color,13);}else for(int i=0;i<4;i++)oval(c,103+i*11,162,9,8,color);text(c,food,120,185,10,0xff7b6c5c);}
+ if(mode.equals("happy"))text(c,"♥",180,54+wave*6,25,0xffdc9ba7);
+ if(mode.equals("disgust"))text(c,"哼！",185,62,18,0xff807269);
+ if(mode.equals("clean")){float x=110+wave*55;line(c,x,108,x-17,153,0xffa78363,9);oval(c,x,106,26,23,0xffedc3a5);p.setColor(0xff889e9e);c.drawRoundRect(x-34,143,x,160,4,4,p);for(int i=0;i<4;i++)line(c,x-30+i*8,147,x-30+i*8,157,0xffd2c2a5,2);}
+ if(mode.equals("pee")||mode.equals("poop"))text(c,mode.equals("pee")?"嘘…尿尿中":"努力…便便中",120,184,12,0xff776658);
+ c.restore();if(isShown())postInvalidateDelayed(33);
+ }
+}
+
