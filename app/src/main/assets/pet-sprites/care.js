@@ -65,4 +65,7 @@ class IdleClock {
 }
 function motionIndex(elapsed,duration=5000,loop=true){const t=Math.max(0,elapsed);return !loop&&t>=duration?59:Math.floor((t%duration)*60/duration)}
 function motionPhase(index,loop){return loop?index/2.5:index*23/59}
-if(typeof module!=='undefined')module.exports={motionIndex,motionPhase,IdleClock,Companion,CareState,ActionTimeline,lunar,birthday,celebration,answer,H};
+// 连续（浮点）版本：随真实时间平滑推进，避免整数取整把动作锁成 12fps 阶梯
+function motionFrame(elapsed,duration=5000,loop=true){const t=Math.max(0,elapsed);return !loop&&t>=duration?59:(t%duration)*60/duration}
+function motionPhaseAt(elapsed,duration=5000,loop=true){const t=Math.max(0,elapsed);if(loop)return (t%duration)*24/duration;if(t>=duration)return 23;return t*23/duration}
+if(typeof module!=='undefined')module.exports={motionIndex,motionPhase,motionFrame,motionPhaseAt,IdleClock,Companion,CareState,ActionTimeline,lunar,birthday,celebration,answer,H};

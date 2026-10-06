@@ -33,7 +33,7 @@ function menu(clicked=true){
  button(panel,'喂食',()=>{panel.replaceChildren();for(const f of ['猫粮','猫条','巧克力'])button(panel,f,()=>feed(f));button(panel,'返回',()=>menu(false))});
  button(panel,'铲屎',clean);
  button(panel,'对话',()=>{panel.classList.add('dialogue-mode');panel.replaceChildren();const input=document.createElement('input');input.placeholder='和球球说话…';input.setAttribute('aria-label','对球球说的话');panel.append(input);const send=()=>{say(answer(input.value,dialogueDate()));input.value=''};button(panel,'发送',send);button(panel,'返回',()=>menu(false));input.onkeydown=e=>{if(e.key==='Enter')send()};layoutPet();input.focus()});
- button(panel,'陪球球玩',companionMenu);button(panel,'让球球回家',close);button(panel,'收起',close)
+ button(panel,'陪球球玩',companionMenu);button(panel,'让球球回家',close);button(panel,'收起',close);button(panel,'锁定球球',()=>{close();say('手机端锁定后，请在球球应用内点击“解救球球”')})
 }
 function companionMenu(){
  panel.classList.remove('dialogue-mode');panel.classList.add('below-mode');panel.replaceChildren();panel.hidden=false;const p=document.createElement('p');p.textContent=companion.title()+' · 亲密度 '+companion.data.affection+'/100\n相伴第 '+companion.days()+' 天 · '+companion.mood();panel.append(p);

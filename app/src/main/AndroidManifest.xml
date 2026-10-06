@@ -5,6 +5,7 @@
  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
  <application android:icon="@drawable/cat_icon" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:label="球球桌面宠物" android:allowBackup="false" android:supportsRtl="true">
  <activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>
+ <activity android:name=".PeriodCalendarActivity" android:exported="false"/>
  <service android:name=".PetService" android:exported="false" android:foregroundServiceType="specialUse"><property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="User enabled interactive floating desktop cat"/></service>
  </application>
 </manifest>

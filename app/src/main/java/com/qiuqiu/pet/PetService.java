@@ -10,14 +10,12 @@ import java.util.*;
 
 public class PetService extends Service {
  WindowManager wm;WindowManager.LayoutParams params;FrameLayout root,panel,menuScroll;
- CatView cat;TextView bubble;PetState state;Companion companion;
+ CatView cat;TextView bubble;PetState state;Companion companion;PeriodData periodData;
  boolean busy,screen=true,dragging,moved,locked;float downX,downY,lastX,lastY,speed;
- long lastTime,fastSince,speechVersion;int originX,originY;boolean edgeHidden,revealedByTouch;int edgeSide=1,peekCount;
+ long lastTime,fastSince,speechVersion;int originX,originY;
  final Handler h=new Handler(Looper.getMainLooper());final Random random=new Random();
  final ActionTimeline actions=new ActionTimeline();
  final IdleMotion idle=new IdleMotion();boolean belowPanel;int panelButtons,belowTextHeight;
- Runnable edgeHide,edgePeek;
- void enterEdge(){android.util.DisplayMetrics d=getResources().getDisplayMetrics();edgeSide=params.x<d.widthPixels/2?-1:1;edgeHidden=true;cat.setVisibility(View.VISIBLE);params.x=edgeSide<0?-dp(136):d.widthPixels-dp(20);bubble.setVisibility(View.GONE);menuScroll.setVisibility(View.GONE);h.removeCallbacks(edgeHide);h.removeCallbacks(edgePeek);reposition();h.postDelayed(edgePeek,60000);}
  void restartIdle(){cat.mode="rest";idle.reset(SystemClock.uptimeMillis());cat.idleStartedUptime=SystemClock.uptimeMillis();}
  void resetPanel(boolean below,int height){panel.removeAllViews();belowPanel=below;panelButtons=0;belowTextHeight=0;panel.getLayoutParams().height=dp(height);panel.requestLayout();menuScroll.getLayoutParams().height=dp(height);menuScroll.requestLayout();}
  void layoutPet(){
@@ -39,18 +37,14 @@ public class PetService extends Service {
  public IBinder onBind(Intent i){return null;}
  int dp(int x){return Math.round(x*getResources().getDisplayMetrics().density);}
  public void onCreate(){
-  super.onCreate();state=new PetState(this);companion=new Companion(this);wm=(WindowManager)getSystemService(WINDOW_SERVICE);
-  edgeHide=()->{if(screen&&!dragging){android.util.DisplayMetrics d=getResources().getDisplayMetrics();edgeHidden=true;cat.setVisibility(View.VISIBLE);params.x=edgeSide<0?-dp(136):d.widthPixels-dp(20);reposition();h.postDelayed(edgePeek,60000);}};
-  edgePeek=()->{if(!screen||dragging||busy||menuScroll.getVisibility()==View.VISIBLE){h.postDelayed(edgePeek,60000);return;}android.util.DisplayMetrics d=getResources().getDisplayMetrics();edgeHidden=false;cat.setVisibility(View.VISIBLE);params.x=edgeSide<0?-dp(110):d.widthPixels-dp(110);peekCount++;reposition();if(peekCount%5==0)say("主人你在干嘛呀");h.postDelayed(edgeHide,5000);};
+  super.onCreate();state=new PetState(this);companion=new Companion(this);periodData=new PeriodData(this);wm=(WindowManager)getSystemService(WINDOW_SERVICE);
   NotificationManager nm=getSystemService(NotificationManager.class);
   nm.createNotificationChannel(new NotificationChannel("pet","球球陪伴",NotificationManager.IMPORTANCE_LOW));
   PendingIntent quit=PendingIntent.getService(this,2,new Intent(this,PetService.class).setAction("stop"),PendingIntent.FLAG_IMMUTABLE);
   PendingIntent open=PendingIntent.getActivity(this,1,new Intent(this,MainActivity.class),PendingIntent.FLAG_IMMUTABLE);
-  PendingIntent unlock=PendingIntent.getService(this,3,new Intent(this,PetService.class).setAction("unlock"),PendingIntent.FLAG_IMMUTABLE);
   startForeground(1,new Notification.Builder(this,"pet").setSmallIcon(com.qiuqiu.pet.R.drawable.cat_icon)
    .setContentTitle("球球正在陪你").setContentText("轻点球球喂食、铲屎或聊天")
-   .setContentIntent(open).addAction(new Notification.Action.Builder(null,"回家",quit).build())
-   .addAction(new Notification.Action.Builder(null,"解锁球球",unlock).build()).build());
+   .setContentIntent(open).addAction(new Notification.Action.Builder(null,"回家",quit).build()).build());
   if(!Settings.canDrawOverlays(this)){stopSelf();return;}
   root=new FrameLayout(this);root.setClipChildren(false);
   bubble=new TextView(this);bubble.setTextColor(0xff453e39);bubble.setTextSize(14);
@@ -79,8 +73,7 @@ public class PetService extends Service {
  boolean touch(View v,MotionEvent e){
   switch(e.getActionMasked()){
    case MotionEvent.ACTION_DOWN:
-    dragging=true;revealedByTouch=edgeHidden;downX=lastX=e.getRawX();downY=lastY=e.getRawY();originX=params.x;originY=params.y;
-    if(edgeHidden){edgeHidden=false;cat.setVisibility(View.VISIBLE);android.util.DisplayMetrics dm=getResources().getDisplayMetrics();params.x=edgeSide<0?-dp(110):dm.widthPixels-dp(110);originX=params.x;reposition();}
+    dragging=true;downX=lastX=e.getRawX();downY=lastY=e.getRawY();originX=params.x;originY=params.y;
     lastTime=e.getEventTime();moved=false;speed=0;fastSince=0;break;
    case MotionEvent.ACTION_MOVE:
     float dx=e.getRawX()-downX,dy=e.getRawY()-downY;
@@ -96,10 +89,7 @@ public class PetService extends Service {
     lastX=e.getRawX();lastY=e.getRawY();lastTime=e.getEventTime();break;
    case MotionEvent.ACTION_UP:case MotionEvent.ACTION_CANCEL:
     dragging=false;cat.travel="";if(!busy)restartIdle();
-    if(moved){android.util.DisplayMetrics dm=getResources().getDisplayMetrics();int left=params.x,right=params.x+dp(156);if(left<=dp(20)||right>=dm.widthPixels-dp(20))enterEdge();}
-    if(!moved&&e.getActionMasked()==MotionEvent.ACTION_UP&&!revealedByTouch)v.performClick();
-    if(revealedByTouch&&!moved)h.postDelayed(edgeHide,5000);
-    revealedByTouch=false;
+    if(!moved&&e.getActionMasked()==MotionEvent.ACTION_UP)v.performClick();
     state.p.edit().putInt("x",params.x).putInt("y",params.y).apply();break;
   }return true;
  }
@@ -107,9 +97,14 @@ public class PetService extends Service {
   if(root==null||params==null)return;
   layoutPet();
   android.util.DisplayMetrics d=getResources().getDisplayMetrics();
-  int minX=edgeHidden?-dp(156):0,maxX=edgeHidden?d.widthPixels-dp(30):Math.max(minX,d.widthPixels-params.width);
+  int sideInset=dp(16);
+  int minX=-sideInset,maxX=Math.max(minX,d.widthPixels-params.width+sideInset);
   params.x=Math.max(minX,Math.min(params.x,maxX));
-  params.y=Math.max(0,Math.min(params.y,Math.max(0,d.heightPixels-root.getHeight()-dp(24))));
+  boolean controlsVisible=bubble.getVisibility()==View.VISIBLE||menuScroll.getVisibility()==View.VISIBLE;
+  int catTop=cat.getTop(),minY=controlsVisible?0:-Math.max(0,Math.round(catTop+cat.visualTop()-dp(4)));
+  int visibleBottom=Math.round(catTop+cat.visualBottom());
+  int maxY=Math.max(minY,d.heightPixels-visibleBottom-dp(4));
+  params.y=Math.max(minY,Math.min(params.y,maxY));
   wm.updateViewLayout(root,params);
  }
  void say(String text){say(text,null);}
@@ -124,13 +119,16 @@ public class PetService extends Service {
  final Runnable hide=()->{if(menuScroll!=null&&menuScroll.getVisibility()!=View.VISIBLE)bubble.setVisibility(View.GONE);};
  void greet(){
   int hour=java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
-  say((hour>=5&&hour<12?"早上好":hour>=12&&hour<18?"下午好":"晚上好")+"，主人",()->say("请尽情吩咐球球，主人"));
+  String hello=(hour>=5&&hour<12?"早上好":hour>=12&&hour<18?"下午好":"晚上好")+"，主人";
+  String reminder=periodData.greetingReminder(java.time.LocalDate.now());
+  if(reminder.isEmpty())say(hello,()->say("请尽情吩咐球球，主人"));
+  else say(hello,()->say(reminder));
  }
  String glyph(String name){if(name.contains("喂食")||name.equals("猫粮"))return "🍚";if(name.equals("猫条"))return "";if(name.equals("巧克力"))return "🍫";if(name.contains("铲屎"))return "🧹";if(name.equals("对话"))return "💬";if(name.contains("陪")||name.contains("摸摸"))return "♡";if(name.contains("悄悄话"))return "☀";if(name.equals("返回"))return "↩";if(name.contains("回家"))return "⌂";if(name.equals("锁定球球"))return "🔒";if(name.equals("收起"))return "×";if(name.equals("知道啦"))return "✓";if(name.equals("发送"))return "➤";return "•";}
  static final class TreatIcon extends View {final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);TreatIcon(Context c){super(c);setContentDescription("猫条");setClickable(true);}protected void onDraw(Canvas c){super.onDraw(c);float s=Math.min(getWidth(),getHeight())/40f;c.save();c.scale(s,s);p.setColor(0xffff9eb8);c.drawRoundRect(13,7,27,33,5,5,p);p.setColor(0xffffedf2);c.drawRect(13,7,27,12,p);p.setColor(0xffe87599);c.drawCircle(20,7,3,p);p.setColor(0xffffd6e1);c.drawRoundRect(16,15,24,26,3,3,p);c.restore();}}
  void button(String name,Runnable action){
   View b=name.equals("猫条")?new TreatIcon(this):new TextView(this);if(b instanceof TextView){TextView t=(TextView)b;t.setText(glyph(name));t.setGravity(Gravity.CENTER);t.setTextSize(20);t.setTextColor(0xff4b5147);}b.setContentDescription(name);b.setTooltipText(name);b.setBackground(circle(0xfffffdf8));
-  int i=panelButtons++;int[][] xy={{90,2},{18,72},{90,160},{158,72},{18,160},{158,160},{90,72}};int n=Math.min(i,xy.length-1);
+  int i=panelButtons++;int[][] xy={{90,2},{18,72},{90,160},{158,72},{18,160},{158,160},{174,10}};int n=Math.min(i,xy.length-1);
   FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(dp(belowPanel?32:40),dp(belowPanel?32:40));lp.leftMargin=dp(belowPanel?4+i*76:xy[n][0]);lp.topMargin=dp(belowPanel?belowTextHeight:xy[n][1]);b.setOnClickListener(v->action.run());panel.addView(b,lp);
  }
  android.graphics.drawable.GradientDrawable circle(int color){android.graphics.drawable.GradientDrawable d=new android.graphics.drawable.GradientDrawable();d.setColor(color);d.setShape(android.graphics.drawable.GradientDrawable.OVAL);d.setStroke(dp(1),0xffd7deca);return d;}
@@ -175,10 +173,15 @@ public class PetService extends Service {
   menuScroll.setVisibility(View.GONE);resizeOverlay(false);if(!busy)restartIdle();focus(false);h.postDelayed(hide,7000);
  }
  void setLocked(boolean value){
-  locked=value;state.p.edit().putBoolean("locked",locked).apply();
+  locked=value;
+  state.p.edit().putBoolean("locked",locked).apply();
   if(menuScroll!=null)menuScroll.setVisibility(View.GONE);
+  if(bubble!=null)bubble.setVisibility(View.GONE);
   if(params==null||root==null)return;
   params.width=dp(156);
+  params.alpha=1.0f;
+  root.setAlpha(1.0f);
+  cat.setAlpha(1.0f);
   params.flags=WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|(locked?WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE:0);
   wm.updateViewLayout(root,params);
   if(!locked&&screen)root.setVisibility(View.VISIBLE);
