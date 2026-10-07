@@ -5,6 +5,7 @@ import android.view.View;
 /** Independently bounded full poses, with extra space around the character. */
 public class CatView extends View {
  public String mode="sit",food="",travel="";public int facing=1,urine,poop;public long actionStartedUptime=-1,heartsUntil;
+ public int stickerEffect=-1;
  private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);private final Rect source=new Rect();private final RectF destination=new RectF();
  private final Path hand=new Path(),heart=new Path();private final java.util.Map<String,MotionAssets.Sheet> sheets;
  private Bitmap props;private MotionAssets.Sequence current;private MotionAssets.Sheet shown;private String previous="";private long since;
@@ -32,10 +33,24 @@ public class CatView extends View {
   super.onDraw(c);long now=android.os.SystemClock.uptimeMillis();String pose=travel.isEmpty()?mode:travel;if(!pose.equals(previous)){previous=pose;since=now;}long elapsed=Math.max(0,now-(!travel.isEmpty()?since:actionStartedUptime>=0?actionStartedUptime:idleStartedUptime>=0?idleStartedUptime:since));
   String key=MotionAssets.key(pose.equals("rest")?"sit":pose,food);MotionAssets.Sheet wanted=sheets.get(key);if(wanted==null){key="sit";wanted=sheets.get(key);}MotionAssets.Sequence loaded=MotionAssets.sequence(getContext(),key,this::postInvalidate);if(loaded!=null){shown=wanted;current=loaded;}props=MotionAssets.image(getContext(),"care-props.png",this::postInvalidate);
   c.save();float size=Math.min(getWidth(),getHeight()),scale=size/320;c.translate((getWidth()-size)/2,(getHeight()-size)/2);c.scale(scale,scale);c.translate(32,32);
+  if(stickerEffect>=0){float wave=(float)Math.sin(elapsed*.005),jump=Math.max(0,(float)Math.sin(elapsed*.007));switch(stickerEffect){case 0:case 10:c.rotate(wave*10,128,190);c.translate(wave*12,0);break;case 2:case 7:case 14:c.translate(0,-jump*38);c.scale(1-wave*.06f,1+wave*.06f,128,220);break;case 4:case 11:c.translate(wave*5,0);break;case 8:case 12:c.rotate(jump*22,128,215);break;case 9:c.scale(1+jump*.08f,1,128,160);break;case 18:c.rotate(elapsed*.12f%360,128,148);break;case 19:c.rotate(wave*6,128,180);break;default:c.translate(0,wave*3);}}
   boolean inTray=mode.equals("pee")||mode.equals("poop")||mode.equals("clean");if(inTray){basin(c,false);deposits(c);}
   if(current!=null&&shown!=null){float ground=inTray?185:241,factor=inTray?.86f:1,centre=128;if(pose.equals("clean")){ground=157;factor=.66f;centre=69;}if(pose.equals("rest"))factor*=1f+(float)Math.sin(now*.002)*.008f;c.save();if((pose.equals("walk")||pose.equals("run"))&&facing<0){c.translate(256,0);c.scale(-1,1);}cat(c,shown,current,MotionCycle.phase(elapsed,shown.duration,shown.loop),ground,factor,centre);c.restore();}
-  if(inTray)basin(c,true);if(mode.equals("clean"))scoop(c,elapsed);if(now<heartsUntil&&pose.equals("happy"))hearts(c,now);c.restore();if(isShown())postInvalidateOnAnimation();
+  if(inTray)basin(c,true);if(mode.equals("clean"))scoop(c,elapsed);if(now<heartsUntil&&pose.equals("happy"))hearts(c,now);if(stickerEffect>=0)stickerDetails(c,elapsed);c.restore();if(isShown())postInvalidateOnAnimation();
  }
+ private void stickerDetails(Canvas c,long elapsed){float wave=(float)Math.sin(elapsed*.006);paint.setColor(0xffeda8ba);paint.setStyle(Paint.Style.FILL);paint.setAlpha(230);switch(stickerEffect){
+  case 0:case 1:case 6:case 19:for(int i=0;i<3;i++){float t=(elapsed%1800)/1800f;c.save();c.translate(63+i*58,104-t*65);c.scale(1.5f,1.5f);c.drawCircle(-3,-2,4,paint);c.drawCircle(3,-2,4,paint);c.drawPath(heart,paint);c.restore();}break;
+  case 3:case 17:paint.setColor(0xff80c4f0);for(int i=0;i<2;i++){float y=130+(elapsed%1000)/1000f*70;c.drawOval(96+i*62,y,104+i*62,y+14,paint);}break;
+  case 4:paint.setColor(0xffdb6161);paint.setStrokeWidth(4);c.drawLine(182,72,194,84,paint);c.drawLine(194,72,182,84,paint);break;
+  case 5:case 13:paint.setColor(0xff9b91c8);paint.setTextSize(24);c.drawText("Z z",165,90-wave*9,paint);break;
+  case 7:case 14:paint.setColor(0xffffc866);for(int i=0;i<4;i++){float x=45+i*54;c.drawCircle(x,80+wave*16,4,paint);}break;
+  case 9:case 10:paint.setColor(0xffe9c6b5);paint.setStrokeWidth(12);paint.setStrokeCap(Paint.Cap.ROUND);c.drawLine(64,178,112+wave*10,155,paint);c.drawLine(193,178,143-wave*10,155,paint);break;
+  case 11:paint.setColor(0xffffbd64);paint.setTextSize(38);c.drawText("!",180,86-wave*8,paint);break;
+  case 12:paint.setColor(0xffe9c6b5);c.drawOval(181,127-wave*17,204,153-wave*17,paint);break;
+  case 15:paint.setColor(0xffe9c6b5);c.drawRoundRect(76+wave*18,68,155+wave*18,82,8,8,paint);break;
+  case 16:paint.setColor(0xffbda1d7);c.drawOval(79,212,177,238,paint);paint.setColor(0xffffe4aa);c.drawOval(85,212,170,226,paint);break;
+  case 18:paint.setColor(0xffa6c4e6);paint.setStyle(Paint.Style.STROKE);paint.setStrokeWidth(3);c.drawArc(30,50,226,240,elapsed*.2f%360,120,false,paint);break;
+ }paint.setStyle(Paint.Style.FILL);paint.setAlpha(255);}
  private void hearts(Canvas c,long now){float progress=1-(heartsUntil-now)/5000f;for(int i=0;i<3;i++){float t=(progress+i*.22f)%1;paint.setColor(0xffd58f9c);paint.setAlpha(Math.round(210*(1-t)));c.save();c.translate(72+i*55+(float)Math.sin(t*5+i)*7,105-t*62);c.drawCircle(-3,-2,4,paint);c.drawCircle(3,-2,4,paint);c.drawPath(heart,paint);c.restore();}paint.setAlpha(255);}
  @Override protected void onAttachedToWindow(){super.onAttachedToWindow();invalidate();}
 }

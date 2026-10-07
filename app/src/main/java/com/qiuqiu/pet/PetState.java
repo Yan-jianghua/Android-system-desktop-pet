@@ -48,6 +48,13 @@ public final class PetState {
   else if(action.equals("clear_litter")){String id="clear:"+payload.optLong("at",at);if(markApplied(c,id)){s.urine=0;s.poop=0;c.getApplicationContext().getSharedPreferences("qiuqiu-sync-applied",0).edit().putLong("lastClearAt",Math.max(at,lastClear(c))).apply();}}s.save();
  }
  private static long lastClear(Context c){return c.getApplicationContext().getSharedPreferences("qiuqiu-sync-applied",0).getLong("lastClearAt",0);}
+ static synchronized void reconcile(Context c,java.util.List<SyncOperation> events){
+  if(events.isEmpty())return;PetState s=new PetState(c);int urine=0,poop=0;long clear=0,nextU=0,nextP=0;java.util.Set<String> seen=new java.util.HashSet<>();
+  for(SyncOperation e:events)if(e.actionType.equals("clear_litter"))try{clear=Math.max(clear,new JSONObject(e.payloadJson).optLong("at",e.createdAtLocal));}catch(Exception ignored){}
+  for(SyncOperation e:events)try{JSONObject p=new JSONObject(e.payloadJson);long at=p.optLong("at",e.createdAtLocal);String key=e.actionType+":"+at;if(!seen.add(key))continue;if(e.actionType.equals("urine")){nextU=Math.max(nextU,at+2*H);if(at>clear)urine+=Math.max(1,p.optInt("pieces",1));}else if(e.actionType.equals("poop")){nextP=Math.max(nextP,at+6*H);if(at>clear)poop+=Math.max(1,p.optInt("pieces",1));}}catch(Exception ignored){}
+  s.urine=urine;s.poop=poop;if(nextU>0)s.nextUrine=nextU;if(nextP>0)s.nextPoop=nextP;s.save();
+  c.getSharedPreferences("qiuqiu-sync-applied",0).edit().putLong("lastClearAt",clear).apply();
+ }
  private static boolean markApplied(Context c,String id){SharedPreferences p=c.getApplicationContext().getSharedPreferences("qiuqiu-sync-applied",0);if(p.getBoolean(id,false))return false;return p.edit().putBoolean(id,true).commit();}
  void save(){
   StringBuilder b=new StringBuilder();for(long f:feeds)b.append(f).append(',');

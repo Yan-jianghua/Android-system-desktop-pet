@@ -159,6 +159,7 @@ public class MainActivity extends Activity {
   Companion friend=new Companion(this);
   memory.setText("猫砂盆 便便"+s.poop+"·尿团"+s.urine+"  |  "+friend.title()+" 亲密度"+friend.affection+"/100  |  "+(s.p.getBoolean("locked",false)?"已锁定":"可拖动"));
  }
- @Override public void onResume(){super.onResume();refresh();ServerConfig server=new ServerConfig(this);if(server.configured()){RealtimeSyncService.start(this);new SyncRepository(this).syncAsync((ok,msg)->{if(ok)refresh();});}idleHandler.removeCallbacks(idle);idleClock.advance(SystemClock.uptimeMillis(),false);idleHandler.post(idle);}
- @Override public void onPause(){idleHandler.removeCallbacks(idle);super.onPause();}
+ final android.content.BroadcastReceiver careRefresh=new android.content.BroadcastReceiver(){public void onReceive(Context c,Intent i){refresh();}};
+ @Override public void onResume(){super.onResume();if(Build.VERSION.SDK_INT>=33)registerReceiver(careRefresh,new IntentFilter(PetService.ACTION_CARE_REFRESH),Context.RECEIVER_NOT_EXPORTED);else registerReceiver(careRefresh,new IntentFilter(PetService.ACTION_CARE_REFRESH));refresh();ServerConfig server=new ServerConfig(this);if(server.configured()){RealtimeSyncService.start(this);new SyncRepository(this).syncAsync((ok,msg)->{if(ok)refresh();});}idleHandler.removeCallbacks(idle);idleClock.advance(SystemClock.uptimeMillis(),false);idleHandler.post(idle);}
+ @Override public void onPause(){unregisterReceiver(careRefresh);idleHandler.removeCallbacks(idle);super.onPause();}
 }

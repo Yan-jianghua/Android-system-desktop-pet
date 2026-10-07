@@ -5,6 +5,7 @@ import java.util.List;
 
 @Dao
 public interface SyncDao {
+ @Query("SELECT * FROM sync_operations WHERE entityType='care' AND syncState IN ('synced','pending') ORDER BY createdAtLocal,opId") List<SyncOperation> careEvents();
  @Insert(onConflict=OnConflictStrategy.IGNORE) long insert(SyncOperation operation);
  @Query("SELECT * FROM sync_operations WHERE syncState='pending' ORDER BY createdAtLocal LIMIT :limit") List<SyncOperation> pending(int limit);
  @Query("SELECT * FROM sync_operations ORDER BY CASE WHEN serverSeq=0 THEN 9223372036854775807 ELSE serverSeq END DESC, createdAtLocal DESC LIMIT :limit") List<SyncOperation> timeline(int limit);

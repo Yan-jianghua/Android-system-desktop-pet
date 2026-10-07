@@ -1,6 +1,6 @@
 {
-  "versionCode": 86,
-  "versionName": "4.0.6-chat-media-stickers",
-  "apkUrl": "https://raw.githubusercontent.com/Yan-jianghua/Android-system-desktop-pet/main/dist/%E7%90%83%E7%90%83%E6%A1%8C%E9%9D%A2%E5%AE%A0%E7%89%A9-4.0.6-chat-media-stickers.apk",
-  "notes": "聊天新增图片、视频、音频附件和20个球球动态表情；通话入口提示所需服务器条件。"
+  "versionCode": 87,
+  "versionName": "4.0.7-gallery-sync",
+  "apkUrl": "https://raw.githubusercontent.com/Yan-jianghua/Android-system-desktop-pet/main/dist/%E7%90%83%E7%90%83%E6%A1%8C%E9%9D%A2%E5%AE%A0%E7%89%A9-4.0.7-gallery-sync.apk",
+  "notes": "修复共享相册和大小便计数历史同步；手机相册选择图片视频，聊天内预览播放；新增球球跳跃、转圈、鞠躬、挥爪、拥抱、流泪动画。"
 }
