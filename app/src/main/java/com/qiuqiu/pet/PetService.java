@@ -129,7 +129,10 @@ public class PetService extends Service {
   String hello=(hour>=5&&hour<12?"早上好":hour>=12&&hour<18?"下午好":"晚上好")+"，主人";
   String reminder=periodData.greetingReminder(java.time.LocalDate.now());
   if(reminder.isEmpty())say(hello,()->say("请尽情吩咐球球，主人"));
-  else say(hello,()->say(reminder));
+  else{
+   String detail=reminder.startsWith("妈妈")?reminder.substring(2):reminder;
+   say(hello.replace("主人","妈妈")+"，"+detail);
+  }
  }
  String glyph(String name){if(name.contains("喂食")||name.equals("猫粮"))return "🍚";if(name.equals("猫条"))return "";if(name.equals("巧克力"))return "🍫";if(name.contains("铲屎"))return "🧹";if(name.equals("对话"))return "💬";if(name.contains("陪")||name.contains("摸摸"))return "♡";if(name.contains("悄悄话"))return "☀";if(name.equals("返回"))return "↩";if(name.contains("回家"))return "⌂";if(name.equals("锁定球球"))return "🔒";if(name.equals("收起")||name.equals("取消"))return "×";if(name.equals("知道啦")||name.equals("确认")||name.equals("答对了"))return "✓";if(name.equals("保留旧记忆"))return "↶";if(name.equals("替换为新内容"))return "↻";if(name.equals("教它改正"))return "✎";if(name.equals("发送"))return "➤";if(name.equals("记忆"))return "▦";if(name.equals("记录"))return "≡";if(name.equals("教球球"))return "✎";return "•";}
  static final class TreatIcon extends View {final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);TreatIcon(Context c){super(c);setContentDescription("猫条");setClickable(true);}protected void onDraw(Canvas c){super.onDraw(c);float s=Math.min(getWidth(),getHeight())/40f;c.save();c.scale(s,s);p.setColor(0xffff9eb8);c.drawRoundRect(13,7,27,33,5,5,p);p.setColor(0xffffedf2);c.drawRect(13,7,27,12,p);p.setColor(0xffe87599);c.drawCircle(20,7,3,p);p.setColor(0xffffd6e1);c.drawRoundRect(16,15,24,26,3,3,p);c.restore();}}
