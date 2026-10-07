@@ -1,0 +1,19 @@
+package com.qiuqiu.pet;
+
+import android.app.*;import android.os.*;import android.graphics.Color;import android.view.*;import android.widget.*;import org.json.*;import java.text.*;import java.util.*;import java.util.concurrent.*;
+
+public class SyncAdminActivity extends Activity {
+ final ExecutorService io=Executors.newSingleThreadExecutor();LinearLayout body;SyncRepository sync;ServerConfig cfg;
+ int dp(int v){return Math.round(v*getResources().getDisplayMetrics().density);}
+ TextView text(String s,int z){TextView t=new TextView(this);t.setText(s);t.setTextSize(z);t.setTextColor(0xff443f39);t.setPadding(0,dp(6),0,dp(6));body.addView(t);return t;}
+ Button button(String s,Runnable r){Button b=new Button(this);b.setText(s);b.setAllCaps(false);b.setOnClickListener(v->r.run());body.addView(b,new LinearLayout.LayoutParams(-1,dp(48)));return b;}
+ @Override public void onCreate(Bundle s){super.onCreate(s);sync=new SyncRepository(this);cfg=new ServerConfig(this);ScrollView scroll=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(18),dp(20),dp(18),dp(28));body.setBackgroundColor(0xfff8f5f2);scroll.addView(body);setContentView(scroll);load();}
+ void load(){body.removeAllViews();text("设备、权限与冲突",27);text("撤销设备会让该设备立即失去同步权限，不会删除其他设备的数据。",13);button("刷新",this::fetch);button("冻结共享关系 24 小时",()->confirm("冻结后禁止新增共享敏感内容，可以恢复。",()->job(true)));button("恢复共享关系",()->job(false));fetch();}
+ void fetch(){text("正在读取服务器……",13);io.execute(()->{try{JSONObject ds=sync.devices(),cs=sync.conflicts();runOnUiThread(()->render(ds,cs));}catch(Exception e){runOnUiThread(()->text("读取失败："+e.getMessage(),13));}});}
+ void render(JSONObject ds,JSONObject cs){body.removeAllViews();text("设备、权限与冲突",27);button("刷新",this::fetch);button("冻结共享关系 24 小时",()->confirm("冻结后禁止新增共享敏感内容，可以恢复。",()->job(true)));button("恢复共享关系",()->job(false));text("有效设备",20);JSONArray devices=ds.optJSONArray("devices");if(devices!=null)for(int i=0;i<devices.length();i++){JSONObject d=devices.optJSONObject(i);LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);card.setPadding(dp(12),dp(8),dp(12),dp(8));card.setBackgroundColor(Color.WHITE);TextView v=new TextView(this);v.setText(d.optString("display_name")+" · "+d.optString("device_name")+"\n最后上线 "+format(d.optLong("last_seen"))+(d.isNull("revoked_at")?"":" · 已撤销"));v.setTextColor(0xff443f39);card.addView(v);if(d.isNull("revoked_at")&&!d.optString("device_id").equals(cfg.deviceId())){Button revoke=new Button(this);revoke.setText("撤销此设备");revoke.setOnClickListener(x->confirm("撤销后该设备不能继续同步。",()->revoke(d.optString("device_id"))));card.addView(revoke);}LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(5),0,dp(5));body.addView(card,lp);}text("冲突与补偿",20);JSONArray conflicts=cs.optJSONArray("conflicts");if(conflicts==null||conflicts.length()==0)text("暂无需要说明的冲突。",13);else for(int i=0;i<conflicts.length();i++){JSONObject c=conflicts.optJSONObject(i);text(c.optString("result")+" · "+c.optString("policy")+"\n"+c.optString("detail"),13);}}
+ void revoke(String id){io.execute(()->{try{sync.revokeDevice(id);runOnUiThread(this::fetch);}catch(Exception e){runOnUiThread(()->Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show());}});}
+ void job(boolean freeze){io.execute(()->{try{if(freeze)sync.freezeRelation();else sync.resumeRelation();runOnUiThread(()->Toast.makeText(this,freeze?"已冻结":"已恢复",Toast.LENGTH_SHORT).show());}catch(Exception e){runOnUiThread(()->Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show());}});}
+ void confirm(String message,Runnable yes){new AlertDialog.Builder(this).setMessage(message).setNegativeButton("取消",null).setPositiveButton("确认",(d,w)->yes.run()).show();}
+ String format(long t){return t<=0?"从未":new SimpleDateFormat("MM-dd HH:mm",Locale.CHINA).format(new Date(t));}
+ @Override protected void onDestroy(){io.shutdownNow();super.onDestroy();}
+}

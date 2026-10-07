@@ -98,6 +98,7 @@ public class PeriodCalendarActivity extends Activity {
   setContentView(scroll);
   render();
  }
+ @Override protected void onResume(){super.onResume();ServerConfig cfg=new ServerConfig(this);if(cfg.configured()){RealtimeSyncService.start(this);new SyncRepository(this).syncAsync((ok,msg)->{if(ok){data=new PeriodData(this);render();}});}}
  TextView text(LinearLayout parent,String value,int size){return text(parent,value,size,INK);}
  TextView text(LinearLayout parent,String value,int size,int color){
   TextView t=new TextView(this);t.setText(value);t.setTextColor(color);t.setTextSize(size);

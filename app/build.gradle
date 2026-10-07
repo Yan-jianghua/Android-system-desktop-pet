@@ -2,13 +2,22 @@ plugins { id 'com.android.application' }
 android {
  namespace 'com.qiuqiu.pet'
  compileSdk 35
- defaultConfig { applicationId 'com.qiuqiu.pet'; minSdk 26; targetSdk 35; versionCode 63; versionName '3.0.3-combined-reminder' }
+ defaultConfig { applicationId 'com.qiuqiu.pet'; minSdk 26; targetSdk 35; versionCode 82; versionName '4.0.2-shared-update' }
  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
 }
 
 dependencies {
  implementation 'androidx.room:room-runtime:2.8.5'
  annotationProcessor 'androidx.room:room-compiler:2.8.5'
+}
+
+// Optional release signing; CI reads these values from GitHub Actions secrets.
+def releaseStoreFile = System.getenv('ANDROID_KEYSTORE_PATH')
+if (releaseStoreFile) {
+ android {
+  signingConfigs { release { storeFile file(releaseStoreFile); storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD'); keyAlias System.getenv('ANDROID_KEY_ALIAS'); keyPassword System.getenv('ANDROID_KEY_PASSWORD') } }
+  buildTypes { release { signingConfig signingConfigs.release; minifyEnabled false } }
+ }
 }
 
 

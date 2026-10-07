@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /** 经期记录与经期 / 排卵期 / 安全期预测，全部保存在手机本地。 */
 public final class PeriodData {
@@ -21,11 +23,12 @@ public final class PeriodData {
   int length(){return end==null?-1:(int)(end.toEpochDay()-start.toEpochDay()+1);}
  }
  final SharedPreferences p;
+ final Context periodContext;
  final ArrayList<Period> periods=new ArrayList<>();
  static final int DEFAULT_CYCLE=28, DEFAULT_LENGTH=5, MAX_PERIOD_DAYS=10;
 
  PeriodData(Context c){
-  p=c.getSharedPreferences("qiuqiu-period",0);
+  periodContext=c.getApplicationContext();p=periodContext.getSharedPreferences("qiuqiu-period",0);
   load();
   autoCloseOldPeriods();
  }
@@ -43,7 +46,7 @@ public final class PeriodData {
     if(!today.isBefore(day10.plusDays(1))){pe.end=day10;changed=true;}
    }
   }
-  if(changed){sort();save();}
+  if(changed){sort();save();enqueueSnapshot();}
  }
  void load(){
   periods.clear();
@@ -62,7 +65,8 @@ public final class PeriodData {
   if(changed)save();
  }
  void sort(){periods.sort((a,b)->a.start.compareTo(b.start));}
- void save(){
+ void save(){save(true);}
+ private void save(boolean enqueue){
   StringBuilder b=new StringBuilder();
   for(Period pe:periods){
    b.append(pe.start.toEpochDay()).append(',');
@@ -70,6 +74,14 @@ public final class PeriodData {
    b.append(';');
   }
   p.edit().putString("periods",b.toString()).commit();
+  if(enqueue)enqueueSnapshot();
+ }
+ private void enqueueSnapshot(){
+  try{JSONArray a=new JSONArray();for(Period pe:periods)a.put(new JSONObject().put("start",pe.start.toEpochDay()).put("end",pe.end==null?JSONObject.NULL:pe.end.toEpochDay()));SyncRepository.enqueue(periodContext,"period","calendar","snapshot",new JSONObject().put("periods",a));}catch(Exception ignored){}
+ }
+ static void applyRemote(Context c,String action,JSONObject payload){
+  if(!"snapshot".equals(action))return;
+  try{PeriodData data=new PeriodData(c);data.periods.clear();JSONArray items=payload.optJSONArray("periods");if(items!=null)for(int i=0;i<items.length();i++){JSONObject row=items.getJSONObject(i);long start=row.getLong("start");Object raw=row.opt("end");LocalDate end=raw==null||raw==JSONObject.NULL?null:LocalDate.ofEpochDay(((Number)raw).longValue());data.periods.add(new Period(LocalDate.ofEpochDay(start),end));}data.sort();data.save(false);}catch(Exception ignored){}
  }
  boolean hasData(){return !periods.isEmpty();}
  /** 平均月经周期：相邻两次“来了”的间隔天数，记录不足时默认 28 天。 */

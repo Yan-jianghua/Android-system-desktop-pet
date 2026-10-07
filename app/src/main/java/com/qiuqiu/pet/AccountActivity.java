@@ -1,0 +1,15 @@
+package com.qiuqiu.pet;
+
+import android.app.*;import android.os.*;import android.content.*;import android.graphics.Typeface;import android.text.InputType;import android.view.*;import android.widget.*;import java.util.concurrent.*;
+
+public class AccountActivity extends Activity {
+ final ExecutorService io=Executors.newSingleThreadExecutor();ServerConfig cfg;SyncRepository sync;LinearLayout root;TextView state;EditText endpoint,username,password,nickname;
+ int dp(int v){return Math.round(v*getResources().getDisplayMetrics().density);}
+ TextView text(String s,int z){TextView t=new TextView(this);t.setText(s);t.setTextSize(z);t.setTextColor(0xff594747);t.setPadding(0,dp(7),0,dp(7));root.addView(t);return t;}
+ EditText input(String hint,String value){EditText e=new EditText(this);e.setHint(hint);e.setText(value);e.setSingleLine();root.addView(e,new LinearLayout.LayoutParams(-1,-2));return e;}
+ Button button(String s,Runnable r){Button b=new Button(this);b.setText(s);b.setOnClickListener(v->r.run());root.addView(b,new LinearLayout.LayoutParams(-1,dp(54)));return b;}
+ @Override public void onCreate(Bundle b){super.onCreate(b);cfg=new ServerConfig(this);sync=new SyncRepository(this);ScrollView sc=new ScrollView(this);root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setPadding(dp(20),dp(22),dp(20),dp(30));root.setBackgroundColor(0xfffff8f3);sc.addView(root);TextView h=text("🐾 球球账户",28);h.setTypeface(Typeface.DEFAULT_BOLD);text("一个账户只能加入或创建一只共养球球。双方分别使用自己的账户。",14);endpoint=input("服务器地址",cfg.endpoint());username=input("账号（字母、数字或下划线）",cfg.accountName());nickname=input("你的昵称",cfg.displayName());password=input("密码，至少 8 位","");password.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);button("✨ 注册新账户",()->account(true));button("🔑 登录",()->account(false));button("💞 设置或加入共养球球",()->startActivity(new Intent(this,ServerSetupActivity.class)));button("退出账户",()->new AlertDialog.Builder(this).setMessage("退出后本机不会再同步，离线数据仍保留。").setNegativeButton("取消",null).setPositiveButton("退出",(d,w)->{cfg.logout();refresh();}).show());state=text("",15);setContentView(sc);refresh();}
+ void account(boolean register){String u=username.getText().toString().trim(),p=password.getText().toString(),n=nickname.getText().toString().trim();if(u.length()<3||p.length()<8){state.setText("账号至少 3 位，密码至少 8 位");return;}cfg.endpoint(endpoint.getText().toString());state.setText("处理中……");io.execute(()->{try{org.json.JSONObject r=register?sync.registerAccount(u,p,n.isEmpty()?u:n,Build.MODEL):sync.loginAccount(u,p,Build.MODEL);runOnUiThread(()->{password.setText("");state.setText(r.has("deviceToken")?"登录成功，已恢复球球同步":"账户成功，请继续创建或加入一只球球");refresh();});}catch(Exception e){runOnUiThread(()->state.setText("失败："+e.getMessage()));}});}
+ void refresh(){state.setText(cfg.accountLoggedIn()?"● 已登录："+cfg.accountName()+"\n"+(cfg.configured()?"💞 已绑定一只球球 · 实时同步已开启":"○ 尚未创建或加入球球"):"○ 尚未登录");if(cfg.configured())RealtimeSyncService.start(this);}
+ @Override protected void onDestroy(){io.shutdownNow();super.onDestroy();}
+}

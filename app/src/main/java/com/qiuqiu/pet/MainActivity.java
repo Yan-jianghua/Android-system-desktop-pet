@@ -35,10 +35,10 @@ public class MainActivity extends Activity {
   GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(radius));return d;
  }
  Button gridBtn(LinearLayout row,String label,int colorIdx,Runnable action){
-  Button b=new Button(this);b.setText(label);b.setAllCaps(false);b.setTextColor(INK);b.setTextSize(12);
-  b.setBackground(glassBg(BTN_COLORS[colorIdx%BTN_COLORS.length],16));
-  b.setPadding(0,dp(8),0,dp(8));
-  LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(0,dp(56),1f);lp.setMargins(dp(5),dp(5),dp(5),dp(5));
+  Button b=new Button(this);b.setText(label);b.setAllCaps(false);b.setTextColor(INK);b.setTextSize(11);
+  b.setBackground(glassBg(BTN_COLORS[colorIdx%BTN_COLORS.length],13));
+  b.setMinHeight(0);b.setMinimumHeight(0);b.setPadding(0,dp(2),0,dp(2));
+  LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(0,dp(38),1f);lp.setMargins(dp(2),dp(2),dp(2),dp(2));
   b.setOnClickListener(v->action.run());row.addView(b,lp);return b;
  }
  public void onCreate(Bundle saved){
@@ -91,12 +91,11 @@ public class MainActivity extends Activity {
   Space space=new Space(this);
   ui.addView(space,new LinearLayout.LayoutParams(-1,0,1f));
 
-  // 底部：半透明按钮区（两行三列）
+  // 底部：紧凑入口行，降低遮挡球球的高度
   LinearLayout btnPanel=new LinearLayout(this);btnPanel.setOrientation(LinearLayout.VERTICAL);
-  btnPanel.setBackground(glassBg(0xe6ffffff,20));btnPanel.setPadding(dp(8),dp(10),dp(8),dp(10));
+  btnPanel.setBackground(glassBg(0xe6ffffff,15));btnPanel.setPadding(dp(4),dp(3),dp(4),dp(3));
 
   LinearLayout row1=new LinearLayout(this);row1.setOrientation(LinearLayout.HORIZONTAL);btnPanel.addView(row1);
-  permission=gridBtn(row1,"悬浮窗",0,()->startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName()))));
   gridBtn(row1,"出门",1,()->{
    if(!Settings.canDrawOverlays(this)){Toast.makeText(this,"请先允许悬浮窗",Toast.LENGTH_SHORT).show();return;}
    if(Build.VERSION.SDK_INT>=33)requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"},1);
@@ -113,19 +112,43 @@ public class MainActivity extends Activity {
   LinearLayout row2=new LinearLayout(this);row2.setOrientation(LinearLayout.HORIZONTAL);btnPanel.addView(row2);
   gridBtn(row2,"回家",3,()->{stopService(new Intent(this,PetService.class));memory.postDelayed(this::refresh,250);});
   gridBtn(row2,"经期日历",4,()->startActivity(new Intent(this,PeriodCalendarActivity.class)));
-  gridBtn(row2,"AI设置",5,()->startActivity(new Intent(this,AiSettingsActivity.class)));
+  gridBtn(row2,"更多功能",5,()->showMore());
+  gridBtn(row2,"双人聊天",1,()->startActivity(new Intent(this,ChatActivity.class)));
 
   ui.addView(btnPanel,new LinearLayout.LayoutParams(-1,-2));
 
   root.addView(ui,new FrameLayout.LayoutParams(-1,-1));
   setContentView(root);
+  SyncJobService.schedule(this);
+  checkForUpdate(false);
+ }
+ void checkForUpdate(boolean manual){
+  new Thread(()->{try{
+   java.net.HttpURLConnection c=(java.net.HttpURLConnection)new java.net.URL("https://raw.githubusercontent.com/Yan-jianghua/Android-system-desktop-pet/main/latest.json").openConnection();c.setConnectTimeout(8000);c.setReadTimeout(8000);
+   org.json.JSONObject release=new org.json.JSONObject(new String(c.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));int code=release.optInt("versionCode",0);String tag=release.optString("versionName","");
+   if(code>getPackageManager().getPackageInfo(getPackageName(),0).versionCode)runOnUiThread(()->showUpdate(tag,release.optString("notes",""),release.optString("apkUrl","")));
+   else if(manual)runOnUiThread(()->android.widget.Toast.makeText(this,"当前已是最新版本",android.widget.Toast.LENGTH_SHORT).show());
+  }catch(Exception e){if(manual)runOnUiThread(()->android.widget.Toast.makeText(this,"暂时无法检查更新",android.widget.Toast.LENGTH_SHORT).show());}}).start();
+ }
+ void showUpdate(String version,String notes,String url){if(url==null||url.isEmpty())return;new AlertDialog.Builder(this).setTitle("发现新版本 "+version).setMessage(notes.isEmpty()?"现在下载并安装更新吗？":notes+"\n\n现在下载并安装吗？").setNegativeButton("稍后",null).setPositiveButton("下载更新",(d,w)->downloadUpdate(url)).show();}
+ void downloadUpdate(String url){new Thread(()->{java.io.File apk=new java.io.File(getExternalFilesDir(null),"qiuqiu-update.apk");try{java.net.HttpURLConnection c=(java.net.HttpURLConnection)new java.net.URL(url).openConnection();c.setConnectTimeout(15000);c.setReadTimeout(30000);try(java.io.InputStream in=c.getInputStream();java.io.FileOutputStream out=new java.io.FileOutputStream(apk)){byte[] buf=new byte[16384];int n;while((n=in.read(buf))>0)out.write(buf,0,n);}runOnUiThread(()->{android.net.Uri uri=new android.net.Uri.Builder().scheme("content").authority(getPackageName()+".provider").appendPath(apk.getName()).build();Intent install=new Intent(Intent.ACTION_VIEW).setDataAndType(uri,"application/vnd.android.package-archive").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_ACTIVITY_NEW_TASK);startActivity(install);});}catch(Exception e){runOnUiThread(()->android.widget.Toast.makeText(this,"更新下载失败，请稍后重试",android.widget.Toast.LENGTH_LONG).show());}}).start();}
+ void showMore(){
+  String[] actions={"悬浮窗权限","经期日历","AI设置","账户","共享相册","成长与同步","检查更新"};
+  new AlertDialog.Builder(this).setTitle("更多功能").setItems(actions,(d,which)->{
+   switch(which){case 0:startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName())));break;
+    case 1:startActivity(new Intent(this,PeriodCalendarActivity.class));break;
+    case 2:startActivity(new Intent(this,AiSettingsActivity.class));break;
+    case 3:startActivity(new Intent(this,AccountActivity.class));break;
+    case 4:startActivity(new Intent(this,AlbumListActivity.class));break;
+    case 5:startActivity(new Intent(this,InsightsActivity.class));break;
+    case 6:checkForUpdate(true);break;}
+  }).show();
  }
  void refresh(){
   PetState s=new PetState(this);
   Companion friend=new Companion(this);
   memory.setText("猫砂盆 便便"+s.poop+"·尿团"+s.urine+"  |  "+friend.title()+" 亲密度"+friend.affection+"/100  |  "+(s.p.getBoolean("locked",false)?"已锁定":"可拖动"));
-  permission.setText(Settings.canDrawOverlays(this)?"悬浮窗已开":"允许悬浮窗");
  }
- @Override public void onResume(){super.onResume();refresh();idleHandler.removeCallbacks(idle);idleClock.advance(SystemClock.uptimeMillis(),false);idleHandler.post(idle);}
+ @Override public void onResume(){super.onResume();refresh();ServerConfig server=new ServerConfig(this);if(server.configured()){RealtimeSyncService.start(this);new SyncRepository(this).syncAsync((ok,msg)->{if(ok)refresh();});}idleHandler.removeCallbacks(idle);idleClock.advance(SystemClock.uptimeMillis(),false);idleHandler.post(idle);}
  @Override public void onPause(){idleHandler.removeCallbacks(idle);super.onPause();}
 }

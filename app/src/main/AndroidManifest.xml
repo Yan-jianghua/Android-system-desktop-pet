@@ -2,16 +2,36 @@
  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+ <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
  <uses-permission android:name="android.permission.INTERNET"/>
  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
- <application android:icon="@drawable/cat_icon" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:label="球球桌面宠物" android:allowBackup="false" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules" android:supportsRtl="true">
+ <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+ <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+ <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
+ <application android:icon="@drawable/cat_icon" android:theme="@style/QiuQiuTheme" android:label="球球桌面宠物" android:allowBackup="false" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules" android:supportsRtl="true" android:networkSecurityConfig="@xml/network_security_config">
  <activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>
  <activity android:name=".AiSettingsActivity" android:exported="false"/>
  <activity android:name=".MemoryActivity" android:exported="false"/>
  <activity android:name=".ChatHistoryActivity" android:exported="false"/>
  <activity android:name=".PeriodCalendarActivity" android:exported="false"/>
+ <activity android:name=".TogetherActivity" android:exported="false"/>
+ <activity android:name=".FeatureActivity" android:exported="false"/>
+ <activity android:name=".VisualFeatureActivity" android:exported="false"/>
+ <activity android:name=".MiniGameActivity" android:exported="false"/>
+ <activity android:name=".AccountActivity" android:exported="false"/>
+ <activity android:name=".ChatActivity" android:exported="false"/>
+ <activity android:name=".AlbumListActivity" android:exported="false"/>
+ <activity android:name=".AlbumDetailActivity" android:exported="false"/>
+ <activity android:name=".PhotoViewerActivity" android:exported="false"/>
+ <activity android:name=".InsightsActivity" android:exported="false"/>
+ <activity android:name=".SyncAdminActivity" android:exported="false"/>
+ <provider android:name=".UpdateFileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true"/>
+ <activity android:name=".ServerSetupActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.VIEW"/><category android:name="android.intent.category.DEFAULT"/><category android:name="android.intent.category.BROWSABLE"/><data android:scheme="qiuqiu" android:host="join"/></intent-filter></activity>
  <service android:name=".PetService" android:exported="false" android:foregroundServiceType="specialUse"><property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="User enabled interactive floating desktop cat"/></service>
+ <service android:name=".SyncJobService" android:permission="android.permission.BIND_JOB_SERVICE" android:exported="false"/>
+ <service android:name=".RealtimeSyncService" android:exported="false" android:foregroundServiceType="dataSync"/>
+ <receiver android:name=".SyncBootReceiver" android:exported="false"><intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter></receiver>
  </application>
 </manifest>
 

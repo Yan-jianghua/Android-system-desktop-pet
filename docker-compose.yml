@@ -1,0 +1,23 @@
+services:
+  qiuqiu-server:
+    build:
+      context: ./server
+    container_name: qiuqiu-server
+    restart: unless-stopped
+    environment:
+      QIUQIU_ADMIN_TOKEN: ${QIUQIU_ADMIN_TOKEN:?请在 .env 中设置管理员令牌}
+      QIUQIU_INVITE_TTL: ${QIUQIU_INVITE_TTL:-900}
+      QIUQIU_MAX_BODY: ${QIUQIU_MAX_BODY:-12582912}
+    ports:
+      - "${QIUQIU_PORT:-8080}:8080"
+    volumes:
+      - qiuqiu-data:/data
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m
+
+volumes:
+  qiuqiu-data:
+    name: qiuqiu-data
