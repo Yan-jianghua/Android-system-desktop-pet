@@ -206,7 +206,8 @@ public class PeriodCalendarActivity extends Activity {
   }else{
    b.setPositiveButton(isStart?"取消「来了」":"来了",(dialog,which)->{
     if(isStart){data.clearDay(d);toast("已取消："+md(d)+" 来了");}
-    else{data.markStart(d);toast("已记录："+md(d)+" 来了");}
+    else if(data.markStart(d))toast("已记录："+md(d)+" 来了");
+    else toast("两次经期开始日期至少要间隔 15 天，暂不能标记「来了」");
     render();
    });
    b.setNeutralButton("走了",(dialog,which)->{

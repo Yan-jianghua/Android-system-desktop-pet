@@ -18,6 +18,14 @@ public class PeriodCheck {
   check(p.markEnd(start.plusDays(9)),"tenth day should be allowed");
   check(p.periodLength()==10,"inclusive period length should cap at ten");
 
+  PeriodData spacing=new PeriodData(new Context());
+  LocalDate first=LocalDate.of(2026,1,1);
+  check(spacing.markStart(first),"first period should be allowed");
+  check(spacing.markEnd(first.plusDays(4)),"first period should close");
+  check(!spacing.markStart(first.plusDays(14)),"a second start within fourteen days must be rejected");
+  check(spacing.markStart(first.plusDays(15)),"a second start exactly fifteen days later should be allowed");
+  check(!spacing.markStart(first.plusDays(1)),"backdated starts must also respect the fifteen-day gap");
+
   Context legacy=new Context();
   history(legacy,"2026-09-01","2026-09-20","2026-09-29","2026-10-01");
   PeriodData normalized=new PeriodData(legacy);
@@ -32,6 +40,6 @@ public class PeriodCheck {
   eq("妈妈明天可能是排卵日，球球提醒你留意身体状态哦",data.greetingReminder(LocalDate.of(2026,10,12)));
   eq("妈妈今天可能是排卵日，球球提醒你留意身体状态哦",data.greetingReminder(LocalDate.of(2026,10,13)));
   eq("妈妈现在可能处于排卵期，球球提醒你留意身体状态哦",data.greetingReminder(LocalDate.of(2026,10,15)));
-  System.out.println("PASS: ten-day period maximum, legacy normalization, predicted period and ovulation reminders");
+  System.out.println("PASS: ten-day maximum, fifteen-day start gap, legacy normalization, predicted period and ovulation reminders");
  }
 }

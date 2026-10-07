@@ -95,12 +95,16 @@ public final class PeriodData {
  Period periodStarting(LocalDate d){for(Period pe:periods)if(pe.start.equals(d))return pe;return null;}
  Period periodEnding(LocalDate d){for(Period pe:periods)if(pe.end!=null&&pe.end.equals(d))return pe;return null;}
  boolean isActualStart(LocalDate d){return periodStarting(d)!=null;}
- /** 标记“来了”：开启新的一段经期；若已有未“走了”的经期，则把开始日期改到这一天。 */
- void markStart(LocalDate d){
-  Period open=null;for(Period pe:periods)if(pe.end==null)open=pe;
+ /** 标记“来了”：两次开始日期至少相隔 15 天。 */
+ boolean markStart(LocalDate d){
+  Period open=openPeriod();
+  for(Period pe:periods){
+   if(pe==open)continue;
+   if(Math.abs(ChronoUnit.DAYS.between(pe.start,d))<15)return false;
+  }
   if(open!=null)open.start=d;
   else if(periodStarting(d)==null)periods.add(new Period(d,null));
-  sort();save();
+  sort();save();return true;
  }
  /** 标记“走了”：结束最近一段尚未结束的经期。无法配对时返回 false。 */
  boolean markEnd(LocalDate d){
