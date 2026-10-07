@@ -200,7 +200,7 @@ public class PeriodCalendarActivity extends Activity {
    // 正在经期中且不是开始日：只能标记「走了」
    b.setPositiveButton("走了",(dialog,which)->{
     if(data.markEnd(d)){toast("已记录："+md(d)+" 走了");render();}
-    else toast("请先在例假来的那天标记「来了」");
+    else toast(endDateError(d,open));
    });
    b.setNegativeButton("关闭",null);
   }else{
@@ -211,11 +211,16 @@ public class PeriodCalendarActivity extends Activity {
    });
    b.setNeutralButton("走了",(dialog,which)->{
     if(data.markEnd(d)){toast("已记录："+md(d)+" 走了");render();}
-    else toast("请先在例假来的那天标记「来了」");
+    else toast(endDateError(d,data.openPeriod()));
    });
    b.setNegativeButton("关闭",null);
   }
   b.show();
+ }
+ String endDateError(LocalDate d,PeriodData.Period open){
+  if(open!=null&&d.isAfter(open.start.plusDays(PeriodData.MAX_PERIOD_DAYS-1)))
+   return "单次经期最多 10 天，请选择开始后的 10 天内结束";
+  return "请先在例假来的那天标记「来了」";
  }
  void toast(String t){android.widget.Toast.makeText(this,t,android.widget.Toast.LENGTH_SHORT).show();}
 }

@@ -22,7 +22,7 @@ public final class PeriodData {
  }
  final SharedPreferences p;
  final ArrayList<Period> periods=new ArrayList<>();
- static final int DEFAULT_CYCLE=28, DEFAULT_LENGTH=5;
+ static final int DEFAULT_CYCLE=28, DEFAULT_LENGTH=5, MAX_PERIOD_DAYS=10;
 
  PeriodData(Context c){
   p=c.getSharedPreferences("qiuqiu-period",0);
@@ -31,29 +31,35 @@ public final class PeriodData {
  }
  /** 获取尚未标记"走了"的经期，没有则返回 null。 */
  Period openPeriod(){for(Period pe:periods)if(pe.end==null)return pe;return null;}
- /** 来了满 7 天仍未标记"走了"，自动把第 7 天记为"走了"。 */
+ /** 来了满 10 天仍未标记"走了"，自动把第 10 天记为"走了"。 */
  void autoCloseOldPeriods(){
-  LocalDate today=LocalDate.now();boolean changed=false;
+  autoCloseOldPeriods(LocalDate.now());
+ }
+ void autoCloseOldPeriods(LocalDate today){
+  boolean changed=false;
   for(Period pe:periods){
    if(pe.end==null){
-    LocalDate day7=pe.start.plusDays(6); // 来了当天算第 1 天，第 7 天 = start+6
-    if(!today.isBefore(day7.plusDays(1))){pe.end=day7;changed=true;}
+    LocalDate day10=pe.start.plusDays(MAX_PERIOD_DAYS-1);
+    if(!today.isBefore(day10.plusDays(1))){pe.end=day10;changed=true;}
    }
   }
   if(changed){sort();save();}
  }
  void load(){
   periods.clear();
+  boolean changed=false;
   String raw=p.getString("periods","");
   if(!raw.isEmpty())for(String pair:raw.split(";")){
    String[] parts=pair.split(",",-1);
    try{
     LocalDate s=LocalDate.ofEpochDay(Long.parseLong(parts[0]));
     LocalDate e=parts.length>1&&!parts[1].isEmpty()?LocalDate.ofEpochDay(Long.parseLong(parts[1])):null;
+    if(e!=null&&e.isAfter(s.plusDays(MAX_PERIOD_DAYS-1))){e=s.plusDays(MAX_PERIOD_DAYS-1);changed=true;}
     periods.add(new Period(s,e));
    }catch(Exception ignored){}
   }
   sort();
+  if(changed)save();
  }
  void sort(){periods.sort((a,b)->a.start.compareTo(b.start));}
  void save(){
@@ -79,7 +85,7 @@ public final class PeriodData {
  /** 平均经期天数：“来了”到“走了”含首尾两天，默认 5 天。 */
  int periodLength(){
   long sum=0;int n=0;
-  for(Period pe:periods){int l=pe.length();if(l>=1&&l<=15){sum+=l;n++;}}
+  for(Period pe:periods){int l=pe.length();if(l>=1&&l<=MAX_PERIOD_DAYS){sum+=l;n++;}}
   return n==0?DEFAULT_LENGTH:Math.round((float)sum/n);
  }
  Period periodOn(LocalDate d){
@@ -101,10 +107,10 @@ public final class PeriodData {
   Period open=null;for(Period pe:periods)if(pe.end==null)open=pe;
   if(open==null){
    Period latest=periods.isEmpty()?null:periods.get(periods.size()-1);
-   if(latest!=null&&!d.isBefore(latest.start)){latest.end=d;sort();save();return true;}
+   if(latest!=null&&!d.isBefore(latest.start)&&!d.isAfter(latest.start.plusDays(MAX_PERIOD_DAYS-1))){latest.end=d;sort();save();return true;}
    return false;
   }
-  if(d.isBefore(open.start))return false;
+  if(d.isBefore(open.start)||d.isAfter(open.start.plusDays(MAX_PERIOD_DAYS-1)))return false;
   open.end=d;save();return true;
  }
  /** 清除某一天的“来了 / 走了”标记。 */
@@ -174,19 +180,26 @@ public final class PeriodData {
   while(d.isBefore(today)&&guard++<500)d=d.plusDays(cycle);
   return d;
  }
- /** 问候时附带的经期提醒；没有记录、已在实际经期中时返回空串。 */
+ /** 问候时附带的经期与排卵提醒；没有记录时返回空串。 */
  String greetingReminder(LocalDate today){
   if(lastStart()==null)return "";
-  if(periodOn(today)!=null)return "";
   int cycle=cycleLength(),len=periodLength();
   LocalDate next=nextPredictedStart(today);
-  if(next.equals(today))return "妈妈今天可能来例假，记得带卫生巾";
-  if(next.equals(today.plusDays(1)))return "妈妈明天可能来例假，记得带卫生巾";
+  if(periodOn(today)==null){
+   if(next.equals(today))return "妈妈今天可能来例假，记得带卫生巾";
+   if(next.equals(today.plusDays(1)))return "妈妈明天可能来例假，记得带卫生巾";
+  }
   LocalDate prev=next;
   while(prev.isAfter(today))prev=prev.minusDays(cycle);
   // 预测经期窗口已开始但还没记录“来了”
-  if(!isActualStart(prev)&&!today.isBefore(prev)&&today.isBefore(prev.plusDays(len)))
+  if(periodOn(today)==null&&!isActualStart(prev)&&!today.isBefore(prev)&&today.isBefore(prev.plusDays(len)))
    return "妈妈这几天可能来例假，记得带卫生巾哦";
+  // 排卵日按下次预测经期前 14 天计算，前后 5 天视为预测排卵期。
+  LocalDate ovulation=next.minusDays(14);
+  if(today.equals(ovulation))return "妈妈今天可能是排卵日，球球提醒你留意身体状态哦";
+  if(today.equals(ovulation.minusDays(1)))return "妈妈明天可能是排卵日，球球提醒你留意身体状态哦";
+  if(!today.isBefore(ovulation.minusDays(5))&&!today.isAfter(ovulation.plusDays(4)))
+   return "妈妈现在可能处于排卵期，球球提醒你留意身体状态哦";
   return "";
  }
 }
