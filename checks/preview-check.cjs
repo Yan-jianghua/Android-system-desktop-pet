@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict');
-const {CareState,ActionTimeline,celebration,answer,H}=require('../app/src/main/assets/pet-sprites/care.js');
+const {CareState,ActionTimeline,celebration,dateContext,answer,H}=require('../app/src/main/assets/pet-sprites/care.js');
 const store=()=>{const m=new Map;return {getItem:k=>m.get(k),setItem:(k,v)=>m.set(k,v)}};
 const base=1800000000000;
 for(let count=0;count<=4;count++){
@@ -9,6 +9,8 @@ for(let count=0;count<=4;count++){
  reopen.clear();assert.equal(new CareState(db,()=>base).data.poop,0)
 }
 const date=s=>Date.parse(s+'T12:00:00+08:00');
+assert.equal(dateContext(date('2026-10-07')),'今天是公历2026年10月7日，星期三；农历八月廿七。');
+assert.equal(answer('今天农历几月几日？',date('2026-10-07')),'今天是公历2026年10月7日，星期三；农历八月廿七。');
 for(const [d,a] of [['2026-10-27','爸爸生日快乐'],['2026-02-05','妈妈生日快乐'],['2027-01-25','妈妈生日快乐'],['2026-02-16','祝爸爸妈妈新年快乐'],['2026-02-17','祝爸爸妈妈新年快乐'],['2026-09-25','祝爸爸妈妈中秋节快乐'],['2026-04-05','祝爸爸妈妈清明节快乐'],['2026-12-22','祝爸爸妈妈冬至快乐']])assert.equal(celebration(date(d)),a);
 assert.equal(answer('什么？',date('2026-10-27')),'球球祝爸爸生日快乐');
 assert.equal(answer('什么？',date('2026-02-05')),'球球祝妈妈生日快乐');

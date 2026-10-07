@@ -14,7 +14,9 @@ public final class PeriodData {
   Period(LocalDate s, LocalDate e){start=s;end=e;}
   boolean contains(LocalDate d){
    if(d.isBefore(start))return false;
-   return end==null||!d.isAfter(end);
+   if(end!=null)return !d.isAfter(end);
+   // 尚未标记"走了"：只把开始日到今天（含）视为实际经期，明天起仍按预测显示
+   return !d.isAfter(LocalDate.now());
   }
   int length(){return end==null?-1:(int)(end.toEpochDay()-start.toEpochDay()+1);}
  }
@@ -25,6 +27,20 @@ public final class PeriodData {
  PeriodData(Context c){
   p=c.getSharedPreferences("qiuqiu-period",0);
   load();
+  autoCloseOldPeriods();
+ }
+ /** 获取尚未标记"走了"的经期，没有则返回 null。 */
+ Period openPeriod(){for(Period pe:periods)if(pe.end==null)return pe;return null;}
+ /** 来了满 7 天仍未标记"走了"，自动把第 7 天记为"走了"。 */
+ void autoCloseOldPeriods(){
+  LocalDate today=LocalDate.now();boolean changed=false;
+  for(Period pe:periods){
+   if(pe.end==null){
+    LocalDate day7=pe.start.plusDays(6); // 来了当天算第 1 天，第 7 天 = start+6
+    if(!today.isBefore(day7.plusDays(1))){pe.end=day7;changed=true;}
+   }
+  }
+  if(changed){sort();save();}
  }
  void load(){
   periods.clear();

@@ -12,7 +12,7 @@ const context=vm.createContext({
  document:{hidden:false,querySelector:s=>nodes.get(s),getElementById:id=>nodes.get(id),createElement:()=>new Element,addEventListener(){}},
  localStorage:{getItem:k=>db.get(k),setItem:(k,v)=>db.set(k,v)},performance:{now:()=>clock},
  Date:class extends Date{static now(){return 1800000000000+clock}},Image:class{},CatRenderer:class{render(){}},window:{},
- setInterval(){},setTimeout:(fn,delay)=>timers.push({fn,at:clock+delay}),requestAnimationFrame(){},console
+ setInterval(){},setTimeout:(fn,delay)=>timers.push({fn,at:clock+delay}),clearTimeout(){},requestAnimationFrame(){},console
 });
 for(const file of ['care.js','preview.js'])vm.runInContext(fs.readFileSync('app/src/main/assets/pet-sprites/'+file,'utf8'),context);
 const run=code=>vm.runInContext(code,context);
@@ -47,3 +47,11 @@ advance(32000);run("companionMenu();panel.children.find(b=>b.textContent==='今�
 assert.equal(run('companion.data.affection'),5);assert.equal(run('state.data.poop'),0);
 run("panel.children.find(b=>b.textContent==='今日悄悄话').onclick()");assert.equal(run('companion.data.affection'),5);
 console.log('PASS: real preview petting animation/hearts, busy guard, daily note and reward deduplication');
+
+run("menu();panel.children.find(b=>b.textContent==='对话').onclick();panel.children[0].value='你最爱谁呀';panel.children.find(b=>b.textContent==='发送').onclick()");
+assert.equal(run('speech.textContent'),'最爱爸爸妈妈');const chatAt=clock;advance(chatAt+9999);assert.equal(run('speech.textContent'),'最爱爸爸妈妈');advance(chatAt+10000);assert.equal(run('speech.textContent'),'');
+console.log('PASS: chat bubble remains for ten seconds and then disappears');
+
+run("say('普通气泡')");const normalAt=clock;advance(normalAt+4999);assert.equal(run('speech.textContent'),'普通气泡');advance(normalAt+5000);assert.equal(run('speech.textContent'),'');
+run('restartIdle();menu()');const menuAt=clock;advance(menuAt+1000);assert.equal(run('idle.elapsed'),1000);
+console.log('PASS: ordinary bubbles disappear after five seconds and menu keeps idle motion running');

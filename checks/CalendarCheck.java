@@ -1,9 +1,17 @@
 package com.qiuqiu.pet;
 import java.time.*;
+import java.util.*;
 public class CalendarCheck {
  static long date(String s){return LocalDate.parse(s).atTime(12,0).atZone(ZoneId.of("Asia/Shanghai")).toInstant().toEpochMilli();}
  static void eq(String a,String b){if(!a.equals(b))throw new AssertionError(a+" != "+b);}
  public static void main(String[] args){
+  eq(Dialogue.dateContext(date("2026-10-07")),"今天是公历2026年10月7日，星期三；农历八月廿七。");
+  eq(Dialogue.answer("今天几号？",date("2026-10-07")),"今天是公历2026年10月7日，星期三；农历八月廿七。");
+  eq(Dialogue.birthdayCountdown("爸爸还有几天生日？",date("2026-10-07"),Collections.emptyList()),"距离爸爸的农历九月十八生日还有20天，对应公历10月27日。");
+  eq(Dialogue.birthdayCountdown("我的生日还有几天？",date("2026-10-07"),Arrays.asList("我的生日是10月10日")),"距离主人的公历10月10日生日还有3天，对应公历10月10日。");
+  eq(Dialogue.birthdayCountdown("我的生日还有多少天？",date("2026-10-07"),Arrays.asList("我的生日是10月10日")),"距离主人的公历10月10日生日还有3天，对应公历10月10日。");
+  eq(Dialogue.birthdayCountdown("我的农历生日什么时候？",date("2026-10-07"),Arrays.asList("我的生日是农历9月18日")),"距离主人的农历九月十八生日还有20天，对应公历10月27日。");
+  eq(Dialogue.birthdayCountdown("还有几天生日？",date("2026-10-07"),Collections.emptyList()),"主人是想问谁的生日呢？告诉球球姓名和生日日期，球球就能帮你计算。");
   eq(Dialogue.celebration(date("2026-10-27")),"爸爸生日快乐");
   eq(Dialogue.answer("你好吗",date("2026-10-27")),"球球祝爸爸生日快乐");
   eq(Dialogue.celebration(date("2026-02-05")),"妈妈生日快乐");

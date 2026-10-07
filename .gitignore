@@ -7,3 +7,10 @@ local.properties
 checks/out/
 
 checks/android-compile/
+
+# SSH 私钥/公钥（误放在项目目录，切勿提交）
+ssh -T git@github.com
+ssh -T git@github.com.pub
+*.pem
+id_rsa
+id_rsa.pub

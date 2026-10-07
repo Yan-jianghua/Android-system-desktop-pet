@@ -1,6 +1,6 @@
 'use strict';
 const canvas=document.querySelector('canvas'),panel=document.getElementById('panel'),speech=document.getElementById('speech'),memory=document.getElementById('memory'),status=document.getElementById('status');
-let offset=Number(localStorage.getItem('qiuqiu-preview-offset')||0),mode='sit',food='',travel='',since=performance.now(),busy=false,face=1,drag=null,speechVersion=0,heartsUntil=0;
+let offset=Number(localStorage.getItem('qiuqiu-preview-offset')||0),mode='sit',food='',travel='',since=performance.now(),busy=false,face=1,drag=null,speechVersion=0,speechTimer=0,heartsUntil=0;
 const now=()=>Date.now()+offset,state=new CareState(localStorage,now),actions=new ActionTimeline,renderer=new CatRenderer(canvas);
 const companion=new Companion(localStorage,()=>Date.now());
 const idle=new IdleClock;idle.reset(performance.now());
@@ -14,25 +14,27 @@ function layoutPet(){
 }
 function button(parent,label,fn){const b=document.createElement('button');b.textContent=label;b.setAttribute('aria-label',label);b.onclick=fn;parent.append(b);return b}
 function set(m,replay=false){if(mode!==m||replay){mode=m;since=performance.now();canvas.setAttribute('aria-label','球球'+({sit:'正在坐着左右看',groom:'正在舔毛',lie:'正在趴着摇尾巴'}[m]||'')+'，点击可以喂食、铲屎或对话')}}
-function say(text,after){
+function say(text,after,duration=5000){
  const version=++speechVersion,done=()=>{if(speechVersion===version)after?.()};
+ clearTimeout(speechTimer);
  speech.textContent=text;
- if(after)setTimeout(done,2200)
+ if(after)setTimeout(done,2200);
+ speechTimer=setTimeout(()=>{if(speechVersion===version){speech.textContent='';layoutPet()}},duration)
 }
+function sayChat(text){say(text,null,10000)}
 function greet(){const hour=new Date().getHours();say((hour>=5&&hour<12?'早上好':hour>=12&&hour<18?'下午好':'晚上好')+'，主人',()=>say('请尽情吩咐球球，主人'))}
 const selected=document.getElementById('date');
 function dialogueDate(){return selected.value?new Date(selected.value+'T12:00:00+08:00').getTime():Date.now()}
 selected.onchange=()=>{const greeting=celebration(dialogueDate());say(greeting||'今天球球也陪着你')};
 document.getElementById('today').onclick=()=>{selected.value='';say('已恢复今天的日期')};
-function close(){panel.hidden=true;panel.classList.remove('dialogue-mode','below-mode');if(!busy)restartIdle();layoutPet()}
+function close(){panel.hidden=true;panel.classList.remove('dialogue-mode','below-mode');layoutPet()}
 function menu(clicked=true){
- if(!busy)restartIdle();
  panel.classList.remove('dialogue-mode','below-mode');
  panel.replaceChildren();panel.hidden=false;
  if(clicked){const f=celebration(dialogueDate());if(f)say(f,()=>say('请尽情吩咐球球，主人'));else say('请尽情吩咐球球，主人')}
  button(panel,'喂食',()=>{panel.replaceChildren();for(const f of ['猫粮','猫条','巧克力'])button(panel,f,()=>feed(f));button(panel,'返回',()=>menu(false))});
  button(panel,'铲屎',clean);
- button(panel,'对话',()=>{panel.classList.add('dialogue-mode');panel.replaceChildren();const input=document.createElement('input');input.placeholder='和球球说话…';input.setAttribute('aria-label','对球球说的话');panel.append(input);const send=()=>{say(answer(input.value,dialogueDate()));input.value=''};button(panel,'发送',send);button(panel,'返回',()=>menu(false));input.onkeydown=e=>{if(e.key==='Enter')send()};layoutPet();input.focus()});
+ button(panel,'对话',()=>{panel.classList.add('dialogue-mode');panel.replaceChildren();const input=document.createElement('input');input.placeholder='和球球说话…';input.setAttribute('aria-label','对球球说的话');panel.append(input);const send=()=>{sayChat(answer(input.value,dialogueDate()));input.value=''};button(panel,'发送',send);button(panel,'返回',()=>menu(false));input.onkeydown=e=>{if(e.key==='Enter')send()};layoutPet();input.focus()});
  button(panel,'陪球球玩',companionMenu);button(panel,'让球球回家',close);button(panel,'收起',close);button(panel,'锁定球球',()=>{close();say('手机端锁定后，请在球球应用内点击“解救球球”')})
 }
 function companionMenu(){
@@ -59,7 +61,7 @@ function refresh(){
 function tick(){
  const motionNow=performance.now();actions.update(motionNow);syncAction();refresh();if(document.hidden){idle.advance(motionNow,false);return}
  const e=actions.toilet?null:state.nextDue(now());if(e){actions.interrupt(e.kind===1?'pee':'poop',5000,()=>state.finish(e),motionNow);syncAction()}
- if(idle.advance(motionNow,!busy&&!drag&&panel.hidden,mode)){set(mode==='rest'?['groom','lie','sit'][Math.floor(Math.random()*3)]:'rest')}
+ if(idle.advance(motionNow,!busy&&!drag,mode)){set(mode==='rest'?['groom','lie','sit'][Math.floor(Math.random()*3)]:'rest')}
  if(!busy)since=motionNow-idle.elapsed;
 }
 setInterval(tick,50);document.addEventListener('visibilitychange',()=>{idle.advance(performance.now(),false);if(!document.hidden){tick();greet()}});refresh();greet();
@@ -77,7 +79,7 @@ canvas.onpointermove=e=>{
  drag.lastX=e.clientX;drag.lastY=e.clientY;drag.time=n
  }
 };
-function release(click){if(!drag)return;const open=click&&!drag.moved;drag=null;travel='';document.getElementById('pet-wrap').style.transform='';if(!busy)restartIdle();if(open)menu()}
+function release(click){if(!drag)return;const moved=drag.moved,open=click&&!moved;drag=null;travel='';document.getElementById('pet-wrap').style.transform='';if(moved&&!busy)restartIdle();if(open)menu()}
 canvas.onpointerup=()=>release(true);canvas.onpointercancel=()=>release(false);
 let lastDraw=0;
 function draw(ms){

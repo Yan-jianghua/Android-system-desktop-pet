@@ -11,8 +11,9 @@ import java.util.*;
 public class PetService extends Service {
  WindowManager wm;WindowManager.LayoutParams params;FrameLayout root,panel,menuScroll;
  CatView cat;TextView bubble;PetState state;Companion companion;PeriodData periodData;
+ AiChatEngine chatEngine;boolean teachingMode;
  boolean busy,screen=true,dragging,moved,locked;float downX,downY,lastX,lastY,speed;
- long lastTime,fastSince,speechVersion;int originX,originY;
+ long lastTime,fastSince,speechVersion,bubbleUntil;int originX,originY;
  final Handler h=new Handler(Looper.getMainLooper());final Random random=new Random();
  final ActionTimeline actions=new ActionTimeline();
  final IdleMotion idle=new IdleMotion();boolean belowPanel;int panelButtons,belowTextHeight;
@@ -37,7 +38,7 @@ public class PetService extends Service {
  public IBinder onBind(Intent i){return null;}
  int dp(int x){return Math.round(x*getResources().getDisplayMetrics().density);}
  public void onCreate(){
-  super.onCreate();state=new PetState(this);companion=new Companion(this);periodData=new PeriodData(this);wm=(WindowManager)getSystemService(WINDOW_SERVICE);
+  super.onCreate();state=new PetState(this);companion=new Companion(this);periodData=new PeriodData(this);chatEngine=new AiChatEngine(this);wm=(WindowManager)getSystemService(WINDOW_SERVICE);
   NotificationManager nm=getSystemService(NotificationManager.class);
   nm.createNotificationChannel(new NotificationChannel("pet","球球陪伴",NotificationManager.IMPORTANCE_LOW));
   PendingIntent quit=PendingIntent.getService(this,2,new Intent(this,PetService.class).setAction("stop"),PendingIntent.FLAG_IMMUTABLE);
@@ -59,7 +60,7 @@ public class PetService extends Service {
   FrameLayout.LayoutParams menuParams=new FrameLayout.LayoutParams(-1,dp(210),Gravity.TOP);menuParams.topMargin=dp(34);root.addView(menuScroll,menuParams);
   params=new WindowManager.LayoutParams(dp(156),-2,WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,PixelFormat.TRANSLUCENT);
-  params.gravity=Gravity.TOP|Gravity.LEFT;params.x=state.p.getInt("x",20);params.y=state.p.getInt("y",300);
+  params.gravity=Gravity.TOP|Gravity.START;params.x=state.p.getInt("x",20);params.y=state.p.getInt("y",300);
   wm.addView(root,params);root.post(this::reposition);
   screen=getSystemService(PowerManager.class).isInteractive();
   root.setVisibility(screen?View.VISIBLE:View.GONE);
@@ -88,7 +89,7 @@ public class PetService extends Service {
     }
     lastX=e.getRawX();lastY=e.getRawY();lastTime=e.getEventTime();break;
    case MotionEvent.ACTION_UP:case MotionEvent.ACTION_CANCEL:
-    dragging=false;cat.travel="";if(!busy)restartIdle();
+    dragging=false;cat.travel="";if(moved&&!busy)restartIdle();
     if(!moved&&e.getActionMasked()==MotionEvent.ACTION_UP)v.performClick();
     state.p.edit().putInt("x",params.x).putInt("y",params.y).apply();break;
   }return true;
@@ -97,13 +98,11 @@ public class PetService extends Service {
   if(root==null||params==null)return;
   layoutPet();
   android.util.DisplayMetrics d=getResources().getDisplayMetrics();
-  int sideInset=dp(16);
-  int minX=-sideInset,maxX=Math.max(minX,d.widthPixels-params.width+sideInset);
+  int sideInset=dp(16);int minX=-sideInset,maxX=Math.max(minX,d.widthPixels-params.width+sideInset);
   params.x=Math.max(minX,Math.min(params.x,maxX));
   boolean controlsVisible=bubble.getVisibility()==View.VISIBLE||menuScroll.getVisibility()==View.VISIBLE;
   int catTop=cat.getTop(),minY=controlsVisible?0:-Math.max(0,Math.round(catTop+cat.visualTop()-dp(4)));
-  int visibleBottom=Math.round(catTop+cat.visualBottom());
-  int maxY=Math.max(minY,d.heightPixels-visibleBottom-dp(4));
+  int visibleBottom=Math.round(catTop+cat.visualBottom()),maxY=Math.max(minY,d.heightPixels-visibleBottom-dp(4));
   params.y=Math.max(minY,Math.min(params.y,maxY));
   wm.updateViewLayout(root,params);
  }
@@ -114,9 +113,17 @@ public class PetService extends Service {
   Runnable continuation=after==null?null:()->{if(speechVersion==version)after.run();};
   bubble.setText(text);bubble.setVisibility(View.VISIBLE);root.post(this::reposition);
   if(continuation!=null)h.postDelayed(continuation,2200);
-  h.removeCallbacks(hide);h.postDelayed(hide,7000);
+  bubbleUntil=SystemClock.uptimeMillis()+5000;h.removeCallbacks(hide);h.postDelayed(hide,5000);
  }
- final Runnable hide=()->{if(menuScroll!=null&&menuScroll.getVisibility()!=View.VISIBLE)bubble.setVisibility(View.GONE);};
+ void sayChat(String text){
+  if(root==null)return;++speechVersion;bubbleUntil=SystemClock.uptimeMillis()+10000;
+  bubble.setText(text);bubble.setVisibility(View.VISIBLE);root.post(this::reposition);h.removeCallbacks(hide);h.postDelayed(hide,10000);
+ }
+ final Runnable hide=new Runnable(){public void run(){
+  long remaining=bubbleUntil-SystemClock.uptimeMillis();
+  if(bubbleUntil>0&&remaining>0){h.postDelayed(this,remaining);return;}
+  bubbleUntil=0;if(bubble!=null){bubble.setVisibility(View.GONE);reposition();}
+ }};
  void greet(){
   int hour=java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
   String hello=(hour>=5&&hour<12?"早上好":hour>=12&&hour<18?"下午好":"晚上好")+"，主人";
@@ -124,7 +131,7 @@ public class PetService extends Service {
   if(reminder.isEmpty())say(hello,()->say("请尽情吩咐球球，主人"));
   else say(hello,()->say(reminder));
  }
- String glyph(String name){if(name.contains("喂食")||name.equals("猫粮"))return "🍚";if(name.equals("猫条"))return "";if(name.equals("巧克力"))return "🍫";if(name.contains("铲屎"))return "🧹";if(name.equals("对话"))return "💬";if(name.contains("陪")||name.contains("摸摸"))return "♡";if(name.contains("悄悄话"))return "☀";if(name.equals("返回"))return "↩";if(name.contains("回家"))return "⌂";if(name.equals("锁定球球"))return "🔒";if(name.equals("收起"))return "×";if(name.equals("知道啦"))return "✓";if(name.equals("发送"))return "➤";return "•";}
+ String glyph(String name){if(name.contains("喂食")||name.equals("猫粮"))return "🍚";if(name.equals("猫条"))return "";if(name.equals("巧克力"))return "🍫";if(name.contains("铲屎"))return "🧹";if(name.equals("对话"))return "💬";if(name.contains("陪")||name.contains("摸摸"))return "♡";if(name.contains("悄悄话"))return "☀";if(name.equals("返回"))return "↩";if(name.contains("回家"))return "⌂";if(name.equals("锁定球球"))return "🔒";if(name.equals("收起")||name.equals("取消"))return "×";if(name.equals("知道啦")||name.equals("确认"))return "✓";if(name.equals("发送"))return "➤";if(name.equals("记忆"))return "▦";if(name.equals("记录"))return "≡";if(name.equals("教球球"))return "✎";return "•";}
  static final class TreatIcon extends View {final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);TreatIcon(Context c){super(c);setContentDescription("猫条");setClickable(true);}protected void onDraw(Canvas c){super.onDraw(c);float s=Math.min(getWidth(),getHeight())/40f;c.save();c.scale(s,s);p.setColor(0xffff9eb8);c.drawRoundRect(13,7,27,33,5,5,p);p.setColor(0xffffedf2);c.drawRect(13,7,27,12,p);p.setColor(0xffe87599);c.drawCircle(20,7,3,p);p.setColor(0xffffd6e1);c.drawRoundRect(16,15,24,26,3,3,p);c.restore();}}
  void button(String name,Runnable action){
   View b=name.equals("猫条")?new TreatIcon(this):new TextView(this);if(b instanceof TextView){TextView t=(TextView)b;t.setText(glyph(name));t.setGravity(Gravity.CENTER);t.setTextSize(20);t.setTextColor(0xff4b5147);}b.setContentDescription(name);b.setTooltipText(name);b.setBackground(circle(0xfffffdf8));
@@ -140,7 +147,7 @@ public class PetService extends Service {
  void resizeOverlay(boolean menu){if(params==null)return;params.width=dp(menu?220:156);wm.updateViewLayout(root,params);}
  void showPanel(){resizeOverlay(true);menuScroll.setVisibility(View.VISIBLE);root.post(this::reposition);}
  void menu(boolean clicked){
-  focus(false);if(!busy)restartIdle();resetPanel(false,210);showPanel();
+  focus(false);resetPanel(false,210);showPanel();
   if(clicked){
    String fest=Dialogue.celebration(System.currentTimeMillis());
    if(fest.isEmpty())say("请尽情吩咐球球，主人");else say(fest,()->say("请尽情吩咐球球，主人"));
@@ -170,30 +177,40 @@ public class PetService extends Service {
    android.view.inputmethod.InputMethodManager imm=getSystemService(android.view.inputmethod.InputMethodManager.class);
    imm.hideSoftInputFromWindow(root.getWindowToken(),0);
   }
-  menuScroll.setVisibility(View.GONE);resizeOverlay(false);if(!busy)restartIdle();focus(false);h.postDelayed(hide,7000);
+  menuScroll.setVisibility(View.GONE);resizeOverlay(false);focus(false);
  }
  void setLocked(boolean value){
-  locked=value;
-  state.p.edit().putBoolean("locked",locked).apply();
+  locked=value;state.p.edit().putBoolean("locked",locked).apply();
   if(menuScroll!=null)menuScroll.setVisibility(View.GONE);
   if(bubble!=null)bubble.setVisibility(View.GONE);
   if(params==null||root==null)return;
   params.width=dp(156);
-  params.alpha=1.0f;
-  root.setAlpha(1.0f);
-  cat.setAlpha(1.0f);
+  params.alpha=1.0f;root.setAlpha(1.0f);cat.setAlpha(1.0f);
   params.flags=WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|(locked?WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE:0);
   wm.updateViewLayout(root,params);
   if(!locked&&screen)root.setVisibility(View.VISIBLE);
   if(!busy&&!locked)restartIdle();
  }
  void chat(){
-  resetPanel(true,36);showPanel();focus(true);
+  teachingMode=false;resetPanel(true,76);showPanel();focus(true);
   EditText input=new EditText(this);input.setSingleLine(true);input.setTextSize(12);input.setPadding(dp(6),0,dp(6),0);input.setBackground(card(0xfffffdf8,10));input.setHint("和球球说话…");input.setContentDescription("对球球说的话");FrameLayout.LayoutParams inputLp=new FrameLayout.LayoutParams(dp(136),dp(32));inputLp.leftMargin=dp(40);inputLp.topMargin=dp(0);panel.addView(input,inputLp);
-  Runnable send=()->{say(Dialogue.answer(input.getText().toString(),System.currentTimeMillis()));input.setText("");};
+  Runnable send=()->{
+   String value=input.getText().toString().trim();if(value.isEmpty())return;
+   if(teachingMode){String[] parts=value.split("(?:=>|→)",2);if(parts.length!=2){sayChat("请用“问题 => 希望的回答”来教球球。 ");return;}say("球球正在学习……");chatEngine.teach(parts[0],parts[1],result->{sayChat(result.text);teachingMode=false;input.setHint("和球球说话…");});input.setText("");return;}
+   say("球球正在想……");input.setText("");chatEngine.send(value,petSnapshot(),result->{sayChat(result.text);if(result.awaitingConfirmation)showMemoryConfirmation();else chat();});showThinkingPanel();
+  };
   input.setOnEditorActionListener((v,id,event)->{send.run();return true;});
-  button("返回",()->menu(false));button("发送",send);FrameLayout.LayoutParams sendLp=(FrameLayout.LayoutParams)panel.getChildAt(2).getLayoutParams();sendLp.leftMargin=dp(180);panel.getChildAt(2).setLayoutParams(sendLp);root.post(this::reposition);
+  chatAction("返回",4,38,()->menu(false));chatAction("教球球",46,38,()->{teachingMode=true;input.setHint("问题 => 希望的回答");input.requestFocus();});chatAction("记忆",88,38,()->openActivity(MemoryActivity.class));chatAction("记录",130,38,()->openActivity(ChatHistoryActivity.class));chatAction("发送",172,38,send);root.post(this::reposition);
  }
+ void chatAction(String name,int left,int top,Runnable action){
+  int before=panel.getChildCount();button(name,action);View view=panel.getChildAt(before);FrameLayout.LayoutParams lp=(FrameLayout.LayoutParams)view.getLayoutParams();lp.leftMargin=dp(left);lp.topMargin=dp(top);view.setLayoutParams(lp);
+ }
+ void showMemoryConfirmation(){
+  focus(false);resetPanel(true,40);showPanel();chatAction("确认",45,2,()->chatEngine.confirm(result->{sayChat(result.text);chat();}));chatAction("取消",95,2,()->chatEngine.reject(result->{sayChat(result.text);chat();}));chatAction("返回",145,2,()->menu(false));
+ }
+ void showThinkingPanel(){focus(false);resetPanel(true,40);showPanel();chatAction("取消",70,2,()->chatEngine.cancel());chatAction("返回",120,2,()->menu(false));}
+ void openActivity(Class<? extends Activity> type){startActivity(new Intent(this,type).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));}
+ PetContextSnapshot petSnapshot(){long now=System.currentTimeMillis();return new PetContextSnapshot(companion.affection,companion.days(now),companion.title(),companion.mood(now),state.poop,state.urine,busy?cat.mode:"待机",now);}
  void feed(String food){
   long now=System.currentTimeMillis();
   if(busy){say(now<state.feedUntil?"十秒内不能再次喂食，还剩 "+Math.max(1,(state.feedUntil-now+999)/1000)+" 秒":"球球正在忙，稍等一下哦");return;}
@@ -231,7 +248,7 @@ public class PetService extends Service {
      actions.interrupt(event.kind==1?"pee":"poop",5000,()->state.finish(event),motionNow);syncAction();
     }
    }
-   long uptime=SystemClock.uptimeMillis();if(idle.advance(uptime,screen&&!busy&&!dragging&&menuScroll.getVisibility()!=View.VISIBLE,cat.mode))cat.mode=IdleMotion.next(cat.mode,random);
+   long uptime=SystemClock.uptimeMillis();if(idle.advance(uptime,screen&&!busy&&!dragging,cat.mode))cat.mode=IdleMotion.next(cat.mode,random);
    cat.idleStartedUptime=uptime-idle.elapsed;layoutPet();h.postDelayed(this,50);
   }
  };
@@ -242,6 +259,7 @@ public class PetService extends Service {
  }
  public void onDestroy(){
   h.removeCallbacksAndMessages(null);
+  if(chatEngine!=null)chatEngine.close();
   if(root!=null){unregisterReceiver(receiver);wm.removeView(root);}
   if(state!=null)state.save();super.onDestroy();
  }

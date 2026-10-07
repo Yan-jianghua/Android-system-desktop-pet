@@ -46,7 +46,9 @@ function celebration(n){
  if(!f&&m===12&&d===(year===2021?21:solarDay(year,12,270)))f='冬至';
  return f?'祝爸爸妈妈'+f+'快乐':'';
 }
-function answer(text,n){const s=text.replace(/[\s，。！？,.!?]/g,'');return ({'你最爱谁呀':'最爱爸爸妈妈','你最爱谁':'最爱爸爸妈妈','爸爸妈妈是谁':'爸爸是闫江桦，妈妈是张春华','叫爸爸':'爸爸','叫妈妈':'妈妈'})[s]||(birthday(n)?'球球祝'+birthday(n)+'生日快乐':'球球不知道')}
+function dateContext(n){const solar=new Date(n+8*H),l=lunar(n),months=['正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'],days=['','初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'],weeks=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];return '今天是公历'+solar.getUTCFullYear()+'年'+(solar.getUTCMonth()+1)+'月'+solar.getUTCDate()+'日，'+weeks[solar.getUTCDay()]+'；农历'+(l.leap?'闰':'')+months[l.month-1]+days[l.day]+'。'}
+function asksToday(s){return ['今天几月几日','今天几号','今天日期','今天是几月','今天农历','今天阴历','今天阳历','今天公历','今天星期'].some(k=>s.includes(k))||['几月几日','几号','日期','农历','阴历','阳历','公历','星期几'].includes(s)}
+function answer(text,n){const s=text.replace(/[\s，。！？,.!?：:；;‘’'"“”]/g,'').toLowerCase();if(asksToday(s))return dateContext(n);return ({'你最爱谁呀':'最爱爸爸妈妈','你最爱谁':'最爱爸爸妈妈','爸爸妈妈是谁':'爸爸是闫江桦，妈妈是张春华','叫爸爸':'爸爸','叫妈妈':'妈妈'})[s]||(birthday(n)?'球球祝'+birthday(n)+'生日快乐':'球球不知道')}
 class Companion {
  constructor(store,clock=Date.now){this.store=store;this.clock=clock;let saved;try{saved=JSON.parse(store.getItem('qiuqiu-companion-v1'))}catch{}this.data=Object.assign({affection:0,pets:0,adopted:clock(),lastPet:0,visited:''},saved||{});this.save()}
  day(n){const d=new Date(n);return String(d.getFullYear())+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')}
@@ -65,7 +67,6 @@ class IdleClock {
 }
 function motionIndex(elapsed,duration=5000,loop=true){const t=Math.max(0,elapsed);return !loop&&t>=duration?59:Math.floor((t%duration)*60/duration)}
 function motionPhase(index,loop){return loop?index/2.5:index*23/59}
-// 连续（浮点）版本：随真实时间平滑推进，避免整数取整把动作锁成 12fps 阶梯
 function motionFrame(elapsed,duration=5000,loop=true){const t=Math.max(0,elapsed);return !loop&&t>=duration?59:(t%duration)*60/duration}
 function motionPhaseAt(elapsed,duration=5000,loop=true){const t=Math.max(0,elapsed);if(loop)return (t%duration)*24/duration;if(t>=duration)return 23;return t*23/duration}
-if(typeof module!=='undefined')module.exports={motionIndex,motionPhase,motionFrame,motionPhaseAt,IdleClock,Companion,CareState,ActionTimeline,lunar,birthday,celebration,answer,H};
+if(typeof module!=='undefined')module.exports={motionIndex,motionPhase,motionFrame,motionPhaseAt,IdleClock,Companion,CareState,ActionTimeline,lunar,birthday,celebration,dateContext,answer,H};
