@@ -9,6 +9,7 @@ import android.widget.*;
 import java.util.*;
 
 public class PetService extends Service {
+ static volatile boolean running;
  WindowManager wm;WindowManager.LayoutParams params;FrameLayout root,panel,menuScroll;
  CatView cat;TextView bubble;PetState state;Companion companion;PeriodData periodData;
  AiChatEngine chatEngine;boolean teachingMode,correcting;String lastQuestion="",lastAnswer="";
@@ -27,7 +28,8 @@ public class PetService extends Service {
  }
  final BroadcastReceiver receiver=new BroadcastReceiver(){
   public void onReceive(Context c,Intent i){
-   if(Intent.ACTION_SCREEN_OFF.equals(i.getAction())){screen=false;++speechVersion;root.setVisibility(View.GONE);dragging=false;cat.travel="";}
+   if(MessageNotifier.ACTION_INCOMING.equals(i.getAction())){String sender=i.getStringExtra("sender"),body=i.getStringExtra("body");sayChat((sender==null?"另一位主人":sender)+"："+(body==null?"发来一条消息":body));}
+   else if(Intent.ACTION_SCREEN_OFF.equals(i.getAction())){screen=false;++speechVersion;root.setVisibility(View.GONE);dragging=false;cat.travel="";}
    else if(Intent.ACTION_SCREEN_ON.equals(i.getAction())||Intent.ACTION_USER_PRESENT.equals(i.getAction())){
     boolean shouldGreet=!screen||bubble.getVisibility()!=View.VISIBLE;
     screen=true;idle.advance(SystemClock.uptimeMillis(),false);root.setVisibility(View.VISIBLE);if(shouldGreet)greet();
@@ -38,7 +40,7 @@ public class PetService extends Service {
  public IBinder onBind(Intent i){return null;}
  int dp(int x){return Math.round(x*getResources().getDisplayMetrics().density);}
  public void onCreate(){
-  super.onCreate();state=new PetState(this);companion=new Companion(this);periodData=new PeriodData(this);chatEngine=new AiChatEngine(this);wm=(WindowManager)getSystemService(WINDOW_SERVICE);
+  super.onCreate();running=true;state=new PetState(this);companion=new Companion(this);periodData=new PeriodData(this);chatEngine=new AiChatEngine(this);wm=(WindowManager)getSystemService(WINDOW_SERVICE);
   NotificationManager nm=getSystemService(NotificationManager.class);
   nm.createNotificationChannel(new NotificationChannel("pet","球球陪伴",NotificationManager.IMPORTANCE_LOW));
   PendingIntent quit=PendingIntent.getService(this,2,new Intent(this,PetService.class).setAction("stop"),PendingIntent.FLAG_IMMUTABLE);
@@ -68,8 +70,8 @@ public class PetService extends Service {
   if(locked)setLocked(true);
   cat.setOnClickListener(v->menu(true));
   cat.setOnTouchListener(this::touch);
-  IntentFilter f=new IntentFilter();f.addAction(Intent.ACTION_USER_PRESENT);f.addAction(Intent.ACTION_SCREEN_ON);f.addAction(Intent.ACTION_SCREEN_OFF);f.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
-  registerReceiver(receiver,f);restartIdle();h.postDelayed(()->{if(screen&&speechVersion==0)greet();},1200);h.post(tick);
+  IntentFilter f=new IntentFilter();f.addAction(Intent.ACTION_USER_PRESENT);f.addAction(Intent.ACTION_SCREEN_ON);f.addAction(Intent.ACTION_SCREEN_OFF);f.addAction(Intent.ACTION_CONFIGURATION_CHANGED);f.addAction(MessageNotifier.ACTION_INCOMING);
+  if(Build.VERSION.SDK_INT>=33)registerReceiver(receiver,f,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(receiver,f);restartIdle();h.postDelayed(()->{if(screen&&speechVersion==0)greet();},1200);h.post(tick);
  }
  boolean touch(View v,MotionEvent e){
   switch(e.getActionMasked()){
@@ -271,6 +273,7 @@ public class PetService extends Service {
   return root==null?START_NOT_STICKY:START_STICKY;
  }
  public void onDestroy(){
+  running=false;
   h.removeCallbacksAndMessages(null);
   if(chatEngine!=null)chatEngine.close();
   if(root!=null){unregisterReceiver(receiver);wm.removeView(root);}
