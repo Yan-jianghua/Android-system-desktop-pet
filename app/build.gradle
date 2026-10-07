@@ -2,7 +2,7 @@ plugins { id 'com.android.application' }
 android {
  namespace 'com.qiuqiu.pet'
  compileSdk 35
- defaultConfig { applicationId 'com.qiuqiu.pet'; minSdk 26; targetSdk 35; versionCode 47; versionName '2.3.3-no-float' }
+ defaultConfig { applicationId 'com.qiuqiu.pet'; minSdk 26; targetSdk 35; versionCode 48; versionName '2.3.4-ai-completion' }
  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
 }
 

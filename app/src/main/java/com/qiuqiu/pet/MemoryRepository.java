@@ -26,6 +26,11 @@ final class MemoryRepository {
   for(MemoryRecord m:all()){int score=score(q,Dialogue.normalize(m.content));if(score>bestScore){bestScore=score;best=m;}}
   return bestScore>0?best:null;
  }
+ MemoryRecord findConflict(String content){
+  String incoming=AiRules.memoryConflictTopic(content);if(incoming.isEmpty())return null;
+  for(MemoryRecord memory:all())if(incoming.equals(AiRules.memoryConflictTopic(memory.content))&&!Dialogue.normalize(content).equals(Dialogue.normalize(memory.content)))return memory;
+  return null;
+ }
  static int score(String q,String value){
   if(q.isEmpty()||value.isEmpty())return 0;if(value.contains(q)||q.contains(value))return 100+Math.min(q.length(),value.length());
   Set<Character> chars=new HashSet<>();for(char c:q.toCharArray())chars.add(c);int hit=0;for(char c:value.toCharArray())if(chars.contains(c))hit++;

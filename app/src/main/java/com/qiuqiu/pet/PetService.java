@@ -11,7 +11,7 @@ import java.util.*;
 public class PetService extends Service {
  WindowManager wm;WindowManager.LayoutParams params;FrameLayout root,panel,menuScroll;
  CatView cat;TextView bubble;PetState state;Companion companion;PeriodData periodData;
- AiChatEngine chatEngine;boolean teachingMode;
+ AiChatEngine chatEngine;boolean teachingMode,correcting;String lastQuestion="",lastAnswer="";
  boolean busy,screen=true,dragging,moved,locked;float downX,downY,lastX,lastY,speed;
  long lastTime,fastSince,speechVersion,bubbleUntil;int originX,originY;
  final Handler h=new Handler(Looper.getMainLooper());final Random random=new Random();
@@ -131,7 +131,7 @@ public class PetService extends Service {
   if(reminder.isEmpty())say(hello,()->say("请尽情吩咐球球，主人"));
   else say(hello,()->say(reminder));
  }
- String glyph(String name){if(name.contains("喂食")||name.equals("猫粮"))return "🍚";if(name.equals("猫条"))return "";if(name.equals("巧克力"))return "🍫";if(name.contains("铲屎"))return "🧹";if(name.equals("对话"))return "💬";if(name.contains("陪")||name.contains("摸摸"))return "♡";if(name.contains("悄悄话"))return "☀";if(name.equals("返回"))return "↩";if(name.contains("回家"))return "⌂";if(name.equals("锁定球球"))return "🔒";if(name.equals("收起")||name.equals("取消"))return "×";if(name.equals("知道啦")||name.equals("确认"))return "✓";if(name.equals("发送"))return "➤";if(name.equals("记忆"))return "▦";if(name.equals("记录"))return "≡";if(name.equals("教球球"))return "✎";return "•";}
+ String glyph(String name){if(name.contains("喂食")||name.equals("猫粮"))return "🍚";if(name.equals("猫条"))return "";if(name.equals("巧克力"))return "🍫";if(name.contains("铲屎"))return "🧹";if(name.equals("对话"))return "💬";if(name.contains("陪")||name.contains("摸摸"))return "♡";if(name.contains("悄悄话"))return "☀";if(name.equals("返回"))return "↩";if(name.contains("回家"))return "⌂";if(name.equals("锁定球球"))return "🔒";if(name.equals("收起")||name.equals("取消"))return "×";if(name.equals("知道啦")||name.equals("确认")||name.equals("答对了"))return "✓";if(name.equals("保留旧记忆"))return "↶";if(name.equals("替换为新内容"))return "↻";if(name.equals("教它改正"))return "✎";if(name.equals("发送"))return "➤";if(name.equals("记忆"))return "▦";if(name.equals("记录"))return "≡";if(name.equals("教球球"))return "✎";return "•";}
  static final class TreatIcon extends View {final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);TreatIcon(Context c){super(c);setContentDescription("猫条");setClickable(true);}protected void onDraw(Canvas c){super.onDraw(c);float s=Math.min(getWidth(),getHeight())/40f;c.save();c.scale(s,s);p.setColor(0xffff9eb8);c.drawRoundRect(13,7,27,33,5,5,p);p.setColor(0xffffedf2);c.drawRect(13,7,27,12,p);p.setColor(0xffe87599);c.drawCircle(20,7,3,p);p.setColor(0xffffd6e1);c.drawRoundRect(16,15,24,26,3,3,p);c.restore();}}
  void button(String name,Runnable action){
   View b=name.equals("猫条")?new TreatIcon(this):new TextView(this);if(b instanceof TextView){TextView t=(TextView)b;t.setText(glyph(name));t.setGravity(Gravity.CENTER);t.setTextSize(20);t.setTextColor(0xff4b5147);}b.setContentDescription(name);b.setTooltipText(name);b.setBackground(circle(0xfffffdf8));
@@ -194,19 +194,29 @@ public class PetService extends Service {
  void chat(){
   teachingMode=false;resetPanel(true,76);showPanel();focus(true);
   EditText input=new EditText(this);input.setSingleLine(true);input.setTextSize(12);input.setPadding(dp(6),0,dp(6),0);input.setBackground(card(0xfffffdf8,10));input.setHint("和球球说话…");input.setContentDescription("对球球说的话");FrameLayout.LayoutParams inputLp=new FrameLayout.LayoutParams(dp(136),dp(32));inputLp.leftMargin=dp(40);inputLp.topMargin=dp(0);panel.addView(input,inputLp);
-  Runnable send=()->{
+  Runnable[] sendAction=new Runnable[1];sendAction[0]=()->{
    String value=input.getText().toString().trim();if(value.isEmpty())return;
+   if(correcting){correcting=false;String question=lastQuestion;input.setText("");say("球球根据纠正重新回答……");chatEngine.correct(question,value,result->{lastAnswer=result.text;sayChat(result.text);if(!result.error)showAnswerFeedback(input,sendAction[0]);else chat();});showThinkingPanel();return;}
    if(teachingMode){String[] parts=value.split("(?:=>|→)",2);if(parts.length!=2){sayChat("请用“问题 => 希望的回答”来教球球。 ");return;}say("球球正在学习……");chatEngine.teach(parts[0],parts[1],result->{sayChat(result.text);teachingMode=false;input.setHint("和球球说话…");});input.setText("");return;}
-   say("球球正在想……");input.setText("");chatEngine.send(value,petSnapshot(),result->{sayChat(result.text);if(result.awaitingConfirmation)showMemoryConfirmation();else chat();});showThinkingPanel();
+   say("球球正在想……");input.setText("");chatEngine.send(value,petSnapshot(),result->{sayChat(result.text);if(result.awaitingConfirmation)showMemoryConfirmation(result.conflictChoice);else if(result.error)chat();else{lastQuestion=value;lastAnswer=result.text;showAnswerFeedback(input,sendAction[0]);}});showThinkingPanel();
   };
-  input.setOnEditorActionListener((v,id,event)->{send.run();return true;});
-  chatAction("返回",4,38,()->menu(false));chatAction("教球球",46,38,()->{teachingMode=true;input.setHint("问题 => 希望的回答");input.requestFocus();});chatAction("记忆",88,38,()->openActivity(MemoryActivity.class));chatAction("记录",130,38,()->openActivity(ChatHistoryActivity.class));chatAction("发送",172,38,send);root.post(this::reposition);
+  input.setOnEditorActionListener((v,id,event)->{sendAction[0].run();return true;});
+  chatAction("返回",4,38,()->menu(false));chatAction("教球球",46,38,()->{teachingMode=true;input.setHint("问题 => 希望的回答");input.requestFocus();});chatAction("记忆",88,38,()->openActivity(MemoryActivity.class));chatAction("记录",130,38,()->openActivity(ChatHistoryActivity.class));chatAction("发送",172,38,sendAction[0]);root.post(this::reposition);
  }
  void chatAction(String name,int left,int top,Runnable action){
   int before=panel.getChildCount();button(name,action);View view=panel.getChildAt(before);FrameLayout.LayoutParams lp=(FrameLayout.LayoutParams)view.getLayoutParams();lp.leftMargin=dp(left);lp.topMargin=dp(top);view.setLayoutParams(lp);
  }
- void showMemoryConfirmation(){
-  focus(false);resetPanel(true,40);showPanel();chatAction("确认",45,2,()->chatEngine.confirm(result->{sayChat(result.text);chat();}));chatAction("取消",95,2,()->chatEngine.reject(result->{sayChat(result.text);chat();}));chatAction("返回",145,2,()->menu(false));
+ void showMemoryConfirmation(){showMemoryConfirmation(false);}
+ void showMemoryConfirmation(boolean conflict){
+  focus(false);resetPanel(true,40);showPanel();
+  if(conflict){chatAction("保留旧记忆",24,2,()->chatEngine.keepOld(result->{sayChat(result.text);chat();}));chatAction("替换为新内容",88,2,()->chatEngine.confirm(result->{sayChat(result.text);chat();}));chatAction("取消",152,2,()->chatEngine.reject(result->{sayChat(result.text);chat();}));}
+  else{chatAction("确认",45,2,()->chatEngine.confirm(result->{sayChat(result.text);chat();}));chatAction("取消",95,2,()->chatEngine.reject(result->{sayChat(result.text);chat();}));chatAction("返回",145,2,()->menu(false));}
+ }
+ void showAnswerFeedback(EditText input,Runnable send){
+  focus(false);resetPanel(true,40);showPanel();
+  chatAction("答对了",38,2,()->{sayChat("谢谢主人确认，球球会继续按这个方式陪你聊天。 ");chat();});
+  chatAction("教它改正",100,2,()->{correcting=true;input.setText("");input.setHint("输入正确内容后发送");resetPanel(true,76);showPanel();FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(dp(136),dp(32));lp.leftMargin=dp(40);panel.addView(input,lp);chatAction("返回",4,38,()->{correcting=false;chat();});chatAction("发送",172,38,send);focus(true);input.requestFocus();});
+  chatAction("返回",162,2,()->chat());
  }
  void showThinkingPanel(){focus(false);resetPanel(true,40);showPanel();chatAction("取消",70,2,()->chatEngine.cancel());chatAction("返回",120,2,()->menu(false));}
  void openActivity(Class<? extends Activity> type){startActivity(new Intent(this,type).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));}

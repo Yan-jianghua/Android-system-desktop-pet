@@ -10,5 +10,7 @@ final class ChatRepository {
  void complete(long id){dao.updateStatus(id,"complete","");}
  void fail(long id,String error){dao.updateStatus(id,"failed",error);}
  List<ChatMessage> recent(int limit){List<ChatMessage> list=dao.recentNewest(limit);Collections.reverse(list);return list;}
+ List<ChatMessage> history(int limit){List<ChatMessage> list=dao.historyNewest(limit);Collections.reverse(list);return list;}
+ void recoverInterrupted(){dao.markInterruptedRequests();}
  void clear(){dao.clear();}
 }
