@@ -1,6 +1,6 @@
 {
-  "versionCode": 83,
-  "versionName": "4.0.3-chat-alert",
+  "versionCode": 84,
+  "versionName": "4.0.4-chat-alert-update",
   "apkUrl": "https://github.com/Yan-jianghua/Android-system-desktop-pet/releases/latest/download/app-release.apk",
-  "notes": "新增双人聊天到达时的桌宠气泡提醒和系统通知音。"
+  "notes": "新增双人聊天到达时的桌宠气泡提醒和系统通知音；提高应用版本号以便识别更新。"
 }
