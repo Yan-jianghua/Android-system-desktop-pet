@@ -304,6 +304,18 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
+        if parsed.path.startswith("/v1/attachments/"):
+            with LOCK, connect() as db:
+                device = auth_device(db, self.headers.get("Authorization"))
+                if not device: return self.send_json(401, {"error": "device_auth_required"})
+                attachment_id = parsed.path.rsplit("/", 1)[-1]
+                row = db.execute("SELECT mime,size,storage_path FROM attachments WHERE attachment_id=? AND space_id=?", (attachment_id, device["space_id"])).fetchone()
+                if not row: return self.send_json(404, {"error": "attachment_not_found"})
+                target = Path(row["storage_path"]).resolve()
+                if ATTACHMENTS not in target.parents or not target.is_file(): return self.send_json(404, {"error": "attachment_not_found"})
+                self.send_response(200); self.send_header("Content-Type", row["mime"]); self.send_header("Content-Length", str(row["size"])); self.send_header("Cache-Control", "private, max-age=3600"); self.send_header("X-Content-Type-Options", "nosniff"); self.end_headers()
+                with target.open("rb") as media: shutil.copyfileobj(media, self.wfile)
+                return
         if parsed.path in {"/", "/admin"}:
             body = ADMIN_HTML.encode("utf-8")
             self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -352,7 +364,16 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urlparse(self.path)
-        try: body = self.read_json() if parsed.path != "/v1/admin/backup" else {}
+        raw_attachment = None
+        if parsed.path == "/v1/attachments":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if length <= 0 or length > 10*1024*1024: return self.send_json(413, {"error": "attachment_size_invalid"})
+                raw_attachment = self.rfile.read(length)
+                if len(raw_attachment) != length: return self.send_json(400, {"error": "attachment_incomplete"})
+                body = {}
+            except Exception: return self.send_json(400, {"error": "attachment_invalid"})
+        try: body = body if raw_attachment is not None else self.read_json() if parsed.path != "/v1/admin/backup" else {}
         except ValueError as exc: return self.send_json(400, {"error": str(exc)})
         with LOCK, connect() as db:
             if parsed.path == "/v1/accounts/register":
@@ -438,11 +459,10 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send_json(200,{"status":"active"})
             if parsed.path == "/v1/attachments":
                 if not device: return self.send_json(401, {"error": "device_auth_required"})
-                try: raw = base64.b64decode(body.get("contentBase64", ""), validate=True)
-                except Exception: return self.send_json(400, {"error": "invalid_base64"})
+                raw = raw_attachment or b""
                 if not raw or len(raw) > 10*1024*1024: return self.send_json(413, {"error": "attachment_size_invalid"})
-                mime = str(body.get("mime", "application/octet-stream"))[:100]
-                if not (mime.startswith("image/") or mime == "application/pdf"): return self.send_json(415, {"error": "mime_not_allowed"})
+                mime = str(self.headers.get("Content-Type", "application/octet-stream")).split(";", 1)[0][:100]
+                if not (mime.startswith("image/") or mime.startswith("video/") or mime.startswith("audio/")): return self.send_json(415, {"error": "mime_not_allowed"})
                 digest, attachment_id = hashlib.sha256(raw).hexdigest(), str(uuid.uuid4())
                 target = ATTACHMENTS / digest; target.write_bytes(raw)
                 db.execute("INSERT INTO attachments VALUES(?,?,?,?,?,?,?,?,?)", (attachment_id, device["space_id"], device["actor_id"], digest, mime, len(raw), str(body.get("privacyScope", "shared"))[:20], str(target), now_ms()))

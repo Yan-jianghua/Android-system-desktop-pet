@@ -1,6 +1,6 @@
 {
-  "versionCode": 85,
-  "versionName": "4.0.5-read-sync-stability",
-  "apkUrl": "https://raw.githubusercontent.com/Yan-jianghua/Android-system-desktop-pet/main/dist/%E7%90%83%E7%90%83%E6%A1%8C%E9%9D%A2%E5%AE%A0%E7%89%A9-4.0.5-read-sync-stability.apk",
-  "notes": "新增聊天已读回执，改进相册批量同步和大图内存处理，修复同步后猫砂计数悬浮层不更新并加固悬浮窗生命周期。"
+  "versionCode": 86,
+  "versionName": "4.0.6-chat-media-stickers",
+  "apkUrl": "https://raw.githubusercontent.com/Yan-jianghua/Android-system-desktop-pet/main/dist/%E7%90%83%E7%90%83%E6%A1%8C%E9%9D%A2%E5%AE%A0%E7%89%A9-4.0.6-chat-media-stickers.apk",
+  "notes": "聊天新增图片、视频、音频附件和20个球球动态表情；通话入口提示所需服务器条件。"
 }
