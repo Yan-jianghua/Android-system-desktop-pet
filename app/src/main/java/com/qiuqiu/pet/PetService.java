@@ -10,6 +10,8 @@ import java.util.*;
 
 public class PetService extends Service {
  static volatile boolean running;
+ static final String ACTION_CARE_REFRESH="com.qiuqiu.pet.CARE_REFRESH";
+ boolean receiverRegistered,overlayAttached;
  WindowManager wm;WindowManager.LayoutParams params;FrameLayout root,panel,menuScroll;
  CatView cat;TextView bubble;PetState state;Companion companion;PeriodData periodData;
  AiChatEngine chatEngine;boolean teachingMode,correcting;String lastQuestion="",lastAnswer="";
@@ -29,6 +31,7 @@ public class PetService extends Service {
  final BroadcastReceiver receiver=new BroadcastReceiver(){
   public void onReceive(Context c,Intent i){
    if(MessageNotifier.ACTION_INCOMING.equals(i.getAction())){String sender=i.getStringExtra("sender"),body=i.getStringExtra("body");sayChat((sender==null?"另一位主人":sender)+"："+(body==null?"发来一条消息":body));}
+   else if(ACTION_CARE_REFRESH.equals(i.getAction())){PetState latest=new PetState(PetService.this);state.urine=latest.urine;state.poop=latest.poop;state.nextUrine=latest.nextUrine;state.nextPoop=latest.nextPoop;state.feedUntil=latest.feedUntil;state.feeds.clear();state.feeds.addAll(latest.feeds);cat.urine=state.urine;cat.poop=state.poop;}
    else if(Intent.ACTION_SCREEN_OFF.equals(i.getAction())){screen=false;++speechVersion;root.setVisibility(View.GONE);dragging=false;cat.travel="";}
    else if(Intent.ACTION_SCREEN_ON.equals(i.getAction())||Intent.ACTION_USER_PRESENT.equals(i.getAction())){
     boolean shouldGreet=!screen||bubble.getVisibility()!=View.VISIBLE;
@@ -63,7 +66,7 @@ public class PetService extends Service {
   params=new WindowManager.LayoutParams(dp(156),-2,WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,PixelFormat.TRANSLUCENT);
   params.gravity=Gravity.TOP|Gravity.START;params.x=state.p.getInt("x",20);params.y=state.p.getInt("y",300);
-  wm.addView(root,params);root.post(this::reposition);
+  try{wm.addView(root,params);overlayAttached=true;}catch(RuntimeException failure){stopSelf();return;}root.post(this::reposition);
   screen=getSystemService(PowerManager.class).isInteractive();
   root.setVisibility(screen?View.VISIBLE:View.GONE);
   locked=state.p.getBoolean("locked",false);
@@ -71,7 +74,7 @@ public class PetService extends Service {
   cat.setOnClickListener(v->menu(true));
   cat.setOnTouchListener(this::touch);
   IntentFilter f=new IntentFilter();f.addAction(Intent.ACTION_USER_PRESENT);f.addAction(Intent.ACTION_SCREEN_ON);f.addAction(Intent.ACTION_SCREEN_OFF);f.addAction(Intent.ACTION_CONFIGURATION_CHANGED);f.addAction(MessageNotifier.ACTION_INCOMING);
-  if(Build.VERSION.SDK_INT>=33)registerReceiver(receiver,f,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(receiver,f);restartIdle();h.postDelayed(()->{if(screen&&speechVersion==0)greet();},1200);h.post(tick);
+  if(Build.VERSION.SDK_INT>=33)registerReceiver(receiver,f,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(receiver,f);receiverRegistered=true;restartIdle();h.postDelayed(()->{if(screen&&speechVersion==0)greet();},1200);h.post(tick);
  }
  boolean touch(View v,MotionEvent e){
   switch(e.getActionMasked()){
@@ -276,7 +279,7 @@ public class PetService extends Service {
   running=false;
   h.removeCallbacksAndMessages(null);
   if(chatEngine!=null)chatEngine.close();
-  if(root!=null){unregisterReceiver(receiver);wm.removeView(root);}
+  if(receiverRegistered)try{unregisterReceiver(receiver);}catch(IllegalArgumentException ignored){}if(overlayAttached&&root!=null)try{wm.removeView(root);}catch(IllegalArgumentException|WindowManager.BadTokenException ignored){}
   if(state!=null)state.save();super.onDestroy();
  }
 }
